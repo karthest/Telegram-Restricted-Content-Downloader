@@ -13,14 +13,13 @@ export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"],
   world: "MAIN"
 }
-// div.bubbles
 // div.media-container video预览视频
 // img.media-photo 为预览图
 // img.thumbnail 为详情图
 // div.media-viewer-aspecter video为详情视频
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
-    "div.bubbles div.media-container video, div.bubbles img.media-photo, div.bubbles img.thumbnail, div.bubbles div.media-viewer-aspecter video"
+    "div.media-container video,img.media-photo,img.thumbnail,div.media-viewer-aspecter video"
   )
 
 export const getStyle = () => {
