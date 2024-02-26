@@ -6,7 +6,7 @@ import type {
   PlasmoGetInlineAnchorList,
   PlasmoGetOverlayAnchorList
 } from "plasmo"
-import { useState, type FC, type MouseEventHandler } from "react"
+import { useEffect, useState, type FC, type MouseEventHandler } from "react"
 
 console.log("Telegram Media Downloader is helping you.")
 export const config: PlasmoCSConfig = {
@@ -29,10 +29,22 @@ export const getStyle = () => {
   return style
 }
 
+// a 版本本身支持文字复制，这里为了和k版本处理逻辑一致，也增加了文本的解锁
+const allowTextCopy = () => {
+  const textElements: NodeListOf<HTMLDivElement> =
+    document.querySelectorAll("text-content")
+  textElements.forEach((div) => (div.style.userSelect = "text"))
+  console.log(textElements)
+}
+
 const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [hasTried, setHasTried] = useState(false)
+
+  useEffect(() => {
+    allowTextCopy()
+  }, [])
 
   const downloadImage = (imageElement: HTMLImageElement) => {
     try {

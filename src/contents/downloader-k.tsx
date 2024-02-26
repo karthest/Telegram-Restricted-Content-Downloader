@@ -6,13 +6,14 @@ import type {
   PlasmoGetInlineAnchorList,
   PlasmoGetOverlayAnchorList
 } from "plasmo"
-import { useState, type FC, type MouseEventHandler } from "react"
+import { useEffect, useState, type FC, type MouseEventHandler } from "react"
 
 console.log("Telegram Media Downloader is helping you.")
 export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"],
   world: "MAIN"
 }
+
 // div.media-container video预览视频
 // img.media-photo 为预览图
 // img.thumbnail 为详情图
@@ -28,10 +29,22 @@ export const getStyle = () => {
   return style
 }
 
+// k版本不支持文字的复制，提供解锁功能
+const allowTextCopy = () => {
+  const textElements: NodeListOf<HTMLDivElement> = document.querySelectorAll(
+    "div.message.spoilers-container"
+  )
+  textElements.forEach((div) => (div.style.userSelect = "text"))
+}
+
 const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [hasTried, setHasTried] = useState(false)
+
+  useEffect(() => {
+    allowTextCopy()
+  }, [])
 
   // 当anchor为img.media-photo时，若anchor兄弟节点存在button.video-play，则下载的是视频的缩略图，需要提示用户。
   const showHint =
