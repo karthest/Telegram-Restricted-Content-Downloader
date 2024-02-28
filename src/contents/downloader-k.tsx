@@ -14,13 +14,18 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-// div.media-container video预览视频
-// img.media-photo 为预览图
+// section.bubbles-date-group video预览视频
+// section.bubbles-date-group img.media-photo 为预览图
 // img.thumbnail 为详情图
 // div.media-viewer-aspecter video为详情视频
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
-    "div.media-container video,img.media-photo,img.thumbnail,div.media-viewer-aspecter video"
+    `
+    section.bubbles-date-group video,
+    section.bubbles-date-group img.media-photo,
+    img.thumbnail,
+    div.media-viewer-aspecter video
+    `
   )
 
 export const getStyle = () => {
@@ -116,8 +121,12 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
       const downloadURL = videoElement.src
       console.log("🚀 ~ downloadVideo ~ downloadURL:", downloadURL)
 
-      const sourceName = downloadURL.split("/").slice(-1)[0] || "default.mp4"
-      console.log("🚀 ~ downloadVideo ~ sourceName:", sourceName)
+      const sourceInfo = JSON.parse(
+        decodeURIComponent(downloadURL.split("/").slice(-1)[0])
+      )
+      console.log("🚀 ~ downloadVideo ~ sourceInfo:", sourceInfo)
+
+      const sourceName = sourceInfo.fileName
 
       const requestHeaders: HeadersInit = {
         Range: `bytes=0-`
@@ -130,13 +139,10 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }
 
-      const contentSize = parseInt(
-        response.headers.get("Content-Range").split("/")[1],
-        10
-      )
+      const contentSize = sourceInfo.size
       console.log("🚀 ~ downloadVideo ~ contentSize:", contentSize)
       const segmentSize = parseInt(response.headers.get("Content-Length"), 10)
-      const contentType = response.headers.get("Content-Type")
+      const contentType = sourceInfo.mimeType
       console.log("🚀 ~ downloadVideo ~ contentType:", contentType)
 
       // Check if the server supports partial content
