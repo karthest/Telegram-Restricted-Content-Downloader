@@ -29,7 +29,7 @@ export const getStyle = () => {
   return style
 }
 
-// a 版本本身支持文字复制，这里为了和k版本处理逻辑一致，也增加了文本的解锁
+// a 版本本身支持文字复制，故不再重复处理
 const allowTextCopy = () => {
   const textElements: NodeListOf<HTMLDivElement> =
     document.querySelectorAll("text-content")
@@ -41,10 +41,6 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [hasTried, setHasTried] = useState(false)
-
-  useEffect(() => {
-    allowTextCopy()
-  }, [])
 
   const downloadImage = (imageElement: HTMLImageElement) => {
     try {
