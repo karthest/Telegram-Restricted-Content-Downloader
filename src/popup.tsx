@@ -2,9 +2,9 @@ import { useEffect } from "react"
 
 import "~style.css"
 
-function IndexPopup() {
+export default function IndexPopup() {
   const openFeedBackWindow = () => {
-    window.open("https://t.me/ThisMYUserName0")
+    window.open("https://t.me/+pHaZ8oHR-rZiZDI1")
   }
   return (
     <div className=" plasmo-px-2 plasmo-py-2">
@@ -18,5 +18,3 @@ function IndexPopup() {
     </div>
   )
 }
-
-export default IndexPopup
