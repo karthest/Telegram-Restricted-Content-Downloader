@@ -1,13 +1,13 @@
 {
     "name": "telegram-restricted-downloader",
     "displayName": "Telegram Restrcted Content Downloader",
-    "version": "1.3.0",
+    "version": "2.0.0",
     "description": "A restricted content downloader for telegram",
     "author": "YZH",
     "scripts": {
         "dev": "plasmo dev",
         "build": "plasmo build",
-        "package": "plasmo package"
+        "package": "plasmo package && node assets.mjs"
     },
     "dependencies": {
         "plasmo": "0.84.2",
