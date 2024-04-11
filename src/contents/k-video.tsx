@@ -19,7 +19,7 @@ export const config: PlasmoCSConfig = {
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
-    section.bubbles-date-group video,
+    section.bubbles-date-group video.media-video,
     div.media-viewer-aspecter video
     `
   )
@@ -42,7 +42,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
     const downloadURL = videoElement.src
 
-    const sourceName = downloadURL.split("/").slice(-1)[0] || "default.mp4"
+    const sourceName = "default.mp4"
 
     const videoURL = await partialFetch(downloadURL)
 

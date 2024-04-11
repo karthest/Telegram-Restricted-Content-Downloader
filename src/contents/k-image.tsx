@@ -12,12 +12,12 @@ export const config: PlasmoCSConfig = {
 }
 
 // section.bubbles-date-group img.media-photo ---> preview
-// img.thumbnail ---> detail
+// div.media-viewer-aspecter img.thumbnail ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
     section.bubbles-date-group img.media-photo,
-    img.thumbnail
+    div.media-viewer-aspecter img.thumbnail
     `
   )
 
@@ -32,23 +32,31 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [success, setSuccess] = useState(false)
   const [hasTried, setHasTried] = useState(false)
 
-  // When the anchor is img.media-photo, if button.video-play exists in the anchor sibling node, the video cover is downloaded, and the user needs to be prompted.
   const showHint =
-    anchor.element.tagName === "IMG" &&
     anchor.element.className.includes("media-photo") &&
-    Array.from(anchor.element.parentElement.children).findIndex(
+    // many videos in one messageand not auto-play
+    (Array.from(anchor.element.parentElement.children).findIndex(
       (element) =>
         element.tagName === "BUTTON" && element.className.includes("video-play")
-    ) > -1
+    ) > -1 ||
+      // single video in one message and not auto-play
+      Array.from(anchor.element.parentElement.parentElement.children).findIndex(
+        (element) =>
+          element.tagName === "BUTTON" &&
+          element.className.includes("video-play")
+      ) > -1)
 
-  // When the message is a single video, the page structure is img+video, and the img download button is not displayed at this time.
+  // When the message is a single video and the sibling dom or parents' sibling dom has span.can-autoplay, which means the video can be played once the page loaded, so img download button should not be displayed.
   const shouldNotRender =
-    anchor.element.tagName === "IMG" &&
     anchor.element.className.includes("media-photo") &&
-    Array.from(anchor.element.parentElement.children).findIndex(
-      (element) =>
-        element.tagName === "SPAN" && element.className.includes("can-autoplay")
-    ) > -1
+    (Array.from(anchor.element.parentElement.parentElement.children).findIndex(
+      (element) => element.matches("span.can-autoplay")
+    ) > -1 ||
+      Array.from(anchor.element.parentElement.children).findIndex((element) =>
+        element.matches("span.can-autoplay")
+      ) > -1)
+
+  console.log(Array.from(anchor.element.parentElement.children))
 
   const download: MouseEventHandler<HTMLDivElement> = (e) => {
     try {
