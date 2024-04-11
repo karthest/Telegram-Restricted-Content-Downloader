@@ -14,8 +14,8 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-// video.full-media 为预览视频
-// div.VideoPlayer video 为详情视频
+// video.full-media ---> preview
+// div.VideoPlayer video ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `

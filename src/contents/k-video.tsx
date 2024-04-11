@@ -14,8 +14,8 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-// section.bubbles-date-group video预览视频
-// div.media-viewer-aspecter video为详情视频
+// section.bubbles-date-group video ---> preview
+// div.media-viewer-aspecter video ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `

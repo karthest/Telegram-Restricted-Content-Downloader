@@ -11,8 +11,8 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-// section.bubbles-date-group img.media-photo 为预览图
-// img.thumbnail 为详情图
+// section.bubbles-date-group img.media-photo ---> preview
+// img.thumbnail ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
@@ -32,7 +32,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [success, setSuccess] = useState(false)
   const [hasTried, setHasTried] = useState(false)
 
-  // 当anchor为img.media-photo时，若anchor兄弟节点存在button.video-play，则下载的是视频的缩略图，需要提示用户。
+  // When the anchor is img.media-photo, if button.video-play exists in the anchor sibling node, the video cover is downloaded, and the user needs to be prompted.
   const showHint =
     anchor.element.tagName === "IMG" &&
     anchor.element.className.includes("media-photo") &&
@@ -41,7 +41,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
         element.tagName === "BUTTON" && element.className.includes("video-play")
     ) > -1
 
-  // 当消息为单条视频时，页面结构为img+video，此时不展示img的下载按钮。
+  // When the message is a single video, the page structure is img+video, and the img download button is not displayed at this time.
   const shouldNotRender =
     anchor.element.tagName === "IMG" &&
     anchor.element.className.includes("media-photo") &&

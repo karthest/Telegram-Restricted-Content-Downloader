@@ -13,8 +13,8 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-// img.full-media 为预览图
-// div.MediaViewerContent img 为详情图
+// img.full-media ---> preview
+// div.MediaViewerContent img ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
