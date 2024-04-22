@@ -1,7 +1,6 @@
 import cssText from "data-text:./audio.css"
 import type {
   PlasmoCSConfig,
-  PlasmoCSUIAnchor,
   PlasmoCSUIProps,
   PlasmoGetInlineAnchorList
 } from "plasmo"
@@ -37,16 +36,25 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
     ) as HTMLDivElement
     togglePlayElement.click()
 
-    const fileName =
-      mediaElement.querySelector("middle-ellipsis-element")?.textContent ||
-      "default.mp3"
-
-    const selector = `audio[src*="${encodeURIComponent(fileName)}"]`
+    const htmlFileName = mediaElement
+      .querySelector("middle-ellipsis-element")
+      ?.textContent?.split("…")?.[0]
+    if (htmlFileName === undefined) {
+      // can't find the audio
+      return
+    }
+    const selector = `audio[src*="${encodeURIComponent(htmlFileName)}"]`
 
     const audioElement = (await waitForElement(selector)) as HTMLAudioElement
 
     const downloadURL = audioElement.src
+
     const audioURL = await partialFetch(downloadURL)
+
+    const fileName = JSON.parse(
+      decodeURIComponent(downloadURL.split("stream/")[1])
+    ).fileName
+
     downloadFile(audioURL, fileName)
   }
 

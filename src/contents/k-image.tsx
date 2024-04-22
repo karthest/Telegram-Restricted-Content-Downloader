@@ -56,8 +56,6 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
         element.matches("span.can-autoplay")
       ) > -1)
 
-  console.log(Array.from(anchor.element.parentElement.children))
-
   const download: MouseEventHandler<HTMLDivElement> = (e) => {
     try {
       setHasTried(true)
