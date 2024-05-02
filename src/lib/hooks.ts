@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { concatenateArrayBuffers } from "./helper";
+import { concatenateArrayBuffers, fetchInBatches, getFetchDetails } from "./helper";
+
+interface IPartialFetchOption{
+    autoRetry:boolean
+}
+
+// max request once , total size is 20 * 1MB
+const MAX_FETCH_BATCH = 20
+
 
 export function usePartialFetch(){
     const [isLoading,setIsLoading] = useState(false);
@@ -8,58 +16,48 @@ export function usePartialFetch(){
     const [percentage,setPercentage] = useState(0);
 
 
+    const partialFetch = async (
+        url:string,
+        options:IPartialFetchOption = {
+            autoRetry:true
+        }) => {
 
-    const partialFetch = async (url:string) => {
+        const {autoRetry} = options;
+
+
         try {
             setIsLoading(true);
             setHasTried(true);
 
-            const requestHeaders: HeadersInit = {
-                Range: `bytes=0-`
-            }
-            const response = await fetch(url, {
-                headers: requestHeaders
-            })
-        
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`)
-            }
-        
-            const contentSize = parseInt(
-                response.headers.get("Content-Range").split("/")[1],
-                10
-            )
-        
-            const segmentSize = parseInt(response.headers.get("Content-Length"), 10)
-            const contentType = response.headers.get("Content-Type")
-        
-        
-            // Check if the server supports partial content
-            const acceptRanges = response.headers.get("Accept-Ranges")
-            if (acceptRanges !== "bytes") {
-                throw new Error("Server does not support partial content (byte ranges)");
-            }
-        
-            const segmentCount = Math.ceil(contentSize / segmentSize)
+            const {segmentCount,segmentSize,contentSize,contentType} = await getFetchDetails(url);
         
             const fetchPromises = new Array(segmentCount)
                 .fill(0)
                 .map((value, index) => index * segmentSize)
-                .map((startByte) => {
+                .map((startByte,index) => {
                 const endByte = Math.min(startByte + segmentSize - 1, contentSize - 1)
         
                 const headers: HeadersInit = {
                     Range: `bytes=${startByte}-${endByte}`
                 }
-        
-                return fetch(url, {
+    
+                return () => fetch(url, {
                     headers
                 }).then(res => {
+                    if(res.status === 408){
+                        throw new Error('Flood Error',{
+                            cause:{
+                                range:`bytes=${startByte}-${endByte}`,
+                                index,
+                                response:res
+                            }
+                        })
+                    }
                     setPercentage((prev) => prev +  1/segmentCount)
                     return res.arrayBuffer()
                 })
                 })
-            const bufferArray = await Promise.all(fetchPromises)
+            const bufferArray = await fetchInBatches(fetchPromises,MAX_FETCH_BATCH,autoRetry)
         
             const buffer = concatenateArrayBuffers(bufferArray)
         
@@ -69,7 +67,17 @@ export function usePartialFetch(){
             // Create a URL representing the Blob
             return URL.createObjectURL(blob)
         } catch (error) {
-            setError(error)
+            console.log("🚀 ~ partialFetch ~ error:", error)
+            if(error instanceof Error){
+                if(error.message.startsWith("bytes=")){
+                    // auto retry
+
+
+                }
+                else{
+                    setError(error)
+                }
+            }
         }
         finally{
             setIsLoading(false);
