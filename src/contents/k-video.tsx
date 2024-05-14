@@ -1,12 +1,22 @@
+import type { useThrottleFn } from "ahooks"
 import cssText from "data-text:./video-image.css"
 import type {
   PlasmoCSConfig,
   PlasmoCSUIProps,
   PlasmoGetInlineAnchorList
 } from "plasmo"
-import { useState, type FC, type MouseEventHandler } from "react"
+import { type FC, type MouseEventHandler } from "react"
 
-import { downloadFile } from "~lib/helper"
+import { sendToBackground } from "@plasmohq/messaging"
+
+import {
+  decodeKVersionURL,
+  DownloadFailMessage,
+  downloadFile,
+  DownloadInProgressMessage,
+  DownloadSuccessMessage,
+  Message
+} from "~lib/helper"
 import { usePartialFetch } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
@@ -41,31 +51,67 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
     e.preventDefault()
 
     const downloadURL = videoElement.src
+    const mediaInfo = decodeKVersionURL(downloadURL)
+    const sourceName =
+      mediaInfo.location.fileName || mediaInfo.fileName || mediaInfo.location.id
 
-    const sourceName = "default.mp4"
-
-    const videoURL = await partialFetch(downloadURL)
-
-    downloadFile(videoURL, sourceName)
+    try {
+      window.postMessage(new Message("IncrementBadge"), "*")
+      const videoURL = await partialFetch(downloadURL, {
+        progress: (percentage) => {
+          // send in progress message to background
+          window.postMessage(
+            new DownloadInProgressMessage({
+              contentType: "VIDEO",
+              progress: percentage,
+              size: null,
+              url: downloadURL,
+              name: sourceName
+            }),
+            "*"
+          )
+        }
+      })
+      downloadFile(videoURL, sourceName)
+      // send success message to background
+      window.postMessage(
+        new DownloadSuccessMessage({
+          contentType: "VIDEO",
+          url: downloadURL,
+          name: sourceName
+        }),
+        "*"
+      )
+    } catch (error) {
+      console.error(error)
+      // send fail message to background
+      window.postMessage(
+        new DownloadFailMessage({
+          contentType: "VIDEO",
+          url: downloadURL,
+          name: sourceName
+        }),
+        "*"
+      )
+    }
   }
-
   if (isLoading) {
     return (
-      <div className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-white">
+      <div className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white">
         {`${(percentage * 100).toFixed(2)}%`}
       </div>
     )
   } else if (hasTried) {
     if (!error) {
       return (
-        <div className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-green-500">
+        <div className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-green-500">
           Saved!
         </div>
       )
     } else {
       return (
         <div
-          className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-red-500 hover:plasmo-text-base"
+          className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-red-500 hover:text-base"
           onClick={download}>
           Retry
         </div>
@@ -74,7 +120,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   } else {
     return (
       <div
-        className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-white hover:plasmo-text-base"
+        className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white hover:text-base"
         onClick={download}>
         Download
       </div>

@@ -7,8 +7,7 @@ import type {
 import { useEffect, type FC, type MouseEventHandler } from "react"
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://web.telegram.org/k/*"],
-  world: "MAIN"
+  matches: ["https://web.telegram.org/k/*"]
 }
 
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
@@ -26,7 +25,7 @@ export const getStyle = () => {
 
 const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   useEffect(() => {
-    // k版本不支持文字的复制，在这里提供解锁功能
+    // copy text is not allowed in k version, enable it here
     if (anchor.element instanceof HTMLElement) {
       anchor.element.style.userSelect = "text"
     }

@@ -1,11 +1,4 @@
-
-console.log(
-  "Live now; make now always the most precious time. Now will never come again."
-)
-
-chrome.action.onClicked.addListener(() => {
-  console.log(`action clicked`)
-})
+export {}
 
 /* Note if you're building for firefox or mv2 in general, chrome.action will be undefined so you have to do something like this:
 
@@ -25,10 +18,3 @@ if (chrome.action != undefined) {
   chrome.browserAction.onClicked.addListener(handleClick);
 }
 */
-
-
-chrome.commands.onCommand.addListener((command) => {
-  if (command === "test") {
-    console.log(`test command`)
-  }
-})

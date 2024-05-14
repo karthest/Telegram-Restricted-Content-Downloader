@@ -6,7 +6,15 @@ import type {
 } from "plasmo"
 import { type FC, type MouseEventHandler } from "react"
 
-import { downloadFile, waitForElement } from "~lib/helper"
+import {
+  decodeKVersionURL,
+  DownloadFailMessage,
+  downloadFile,
+  DownloadInProgressMessage,
+  DownloadSuccessMessage,
+  Message,
+  waitForElement
+} from "~lib/helper"
 import { usePartialFetch } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
@@ -35,7 +43,6 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
       "div.audio-toggle"
     ) as HTMLDivElement
     togglePlayElement.click()
-
     const htmlFileName = mediaElement
       .querySelector("middle-ellipsis-element")
       ?.textContent?.split("…")?.[0]
@@ -49,32 +56,70 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
     const downloadURL = audioElement.src
 
-    const audioURL = await partialFetch(downloadURL)
+    const mediaInfo = decodeKVersionURL(downloadURL)
 
-    const fileName = JSON.parse(
-      decodeURIComponent(downloadURL.split("stream/")[1])
-    ).fileName
+    const fileName =
+      mediaInfo.location.fileName || mediaInfo.fileName || mediaInfo.location.id
 
-    downloadFile(audioURL, fileName)
+    try {
+      window.postMessage(new Message("IncrementBadge"), "*")
+      const audioURL = await partialFetch(downloadURL, {
+        progress: (percentage) => {
+          // send in progress message to background
+          window.postMessage(
+            new DownloadInProgressMessage({
+              contentType: "AUDIO",
+              progress: percentage,
+              size: null,
+              url: downloadURL,
+              name: fileName
+            }),
+            "*"
+          )
+        }
+      })
+
+      downloadFile(audioURL, fileName)
+      // send success message to background
+      window.postMessage(
+        new DownloadSuccessMessage({
+          contentType: "AUDIO",
+          url: downloadURL,
+          name: fileName
+        }),
+        "*"
+      )
+    } catch (error) {
+      console.error(error)
+      // send fail message to background
+      window.postMessage(
+        new DownloadFailMessage({
+          contentType: "AUDIO",
+          url: downloadURL,
+          name: fileName
+        }),
+        "*"
+      )
+    }
   }
 
   if (isLoading) {
     return (
-      <div className=" plasmo-text-xs plasmo-cursor-pointer plasmo-rounded-xl plasmo-px-2 plasmo-text-white">
+      <div className=" text-xs cursor-pointer rounded-xl px-2 text-white">
         {`${(percentage * 100).toFixed(2)}%`}
       </div>
     )
   } else if (hasTried) {
     if (!error) {
       return (
-        <div className=" plasmo-text-xs plasmo-cursor-pointer  plasmo-rounded-xl plasmo-px-2 plasmo-text-green-500">
+        <div className=" text-xs cursor-pointer  rounded-xl px-2 text-green-500">
           Saved!
         </div>
       )
     } else {
       return (
         <div
-          className=" plasmo-text-xs plasmo-cursor-pointer  plasmo-rounded-xl plasmo-px-2 plasmo-text-red-500 "
+          className=" text-xs cursor-pointer  rounded-xl px-2 text-red-500 "
           onClick={download}>
           Retry
         </div>
@@ -83,7 +128,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   } else
     return (
       <div
-        className=" plasmo-text-xs plasmo-cursor-pointer  plasmo-rounded-xl plasmo-px-2 plasmo-text-white"
+        className=" text-xs cursor-pointer  rounded-xl px-2 text-white"
         onClick={download}>
         Download
       </div>

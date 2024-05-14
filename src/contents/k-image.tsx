@@ -6,9 +6,17 @@ import type {
 } from "plasmo"
 import { useState, type FC, type MouseEventHandler } from "react"
 
+import { sendToBackground } from "@plasmohq/messaging"
+
+import {
+  DownloadFailMessage,
+  DownloadInProgressMessage,
+  DownloadSuccessMessage,
+  Message
+} from "~lib/helper"
+
 export const config: PlasmoCSConfig = {
-  matches: ["https://web.telegram.org/k/*"],
-  world: "MAIN"
+  matches: ["https://web.telegram.org/k/*"]
 }
 
 // section.bubbles-date-group img.media-photo ---> preview
@@ -57,24 +65,59 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
       ) > -1)
 
   const download: MouseEventHandler<HTMLDivElement> = (e) => {
+    const imageElement = anchor.element as HTMLImageElement
+    const downloadURL = imageElement.src
+    setHasTried(true)
+    setIsLoading(true)
+
+    e.stopPropagation()
+    e.preventDefault()
+
+    const sourceName = downloadURL.split("/").slice(-1)[0] || "default.png"
     try {
-      setHasTried(true)
-      setIsLoading(true)
-      const imageElement = anchor.element as HTMLImageElement
-
-      e.stopPropagation()
-      e.preventDefault()
-      const downloadURL = imageElement.src
-
-      const sourceName = downloadURL.split("/").slice(-1)[0] || "default.png"
+      sendToBackground({
+        name: "badge",
+        body: new Message("IncrementBadge")
+      })
+      // send in progress message to background
+      sendToBackground({
+        name: "progress",
+        body: new DownloadInProgressMessage({
+          contentType: "IMAGE",
+          progress: 0,
+          size: null,
+          url: downloadURL,
+          name: sourceName
+        })
+      })
 
       const downloadLink = document.createElement("a")
       downloadLink.href = downloadURL
       downloadLink.download = sourceName
       downloadLink.click()
       setSuccess(true)
+
+      // send success message to background
+      sendToBackground({
+        name: "success",
+        body: new DownloadSuccessMessage({
+          contentType: "IMAGE",
+          url: downloadURL,
+          name: sourceName
+        })
+      })
     } catch (error) {
+      console.log("🚀 ~ error:", error)
       setSuccess(false)
+      // send fail message to background
+      sendToBackground({
+        name: "fail",
+        body: new DownloadFailMessage({
+          contentType: "IMAGE",
+          url: downloadURL,
+          name: sourceName
+        })
+      })
     } finally {
       setIsLoading(false)
     }
@@ -91,21 +134,21 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
   if (isLoading) {
     return (
-      <div className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-white">
+      <div className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white">
         Downloading...
       </div>
     )
   } else if (hasTried) {
     if (success) {
       return (
-        <div className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-green-500">
+        <div className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-green-500">
           Saved!
         </div>
       )
     } else {
       return (
         <div
-          className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-red-500 hover:plasmo-text-base"
+          className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-red-500 hover:text-base"
           onClick={download}>
           Retry
         </div>
@@ -115,7 +158,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
     if (showHint) {
       return (
         <div
-          className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-white hover:plasmo-text-base"
+          className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white hover:text-base"
           onClick={openVideo}>
           Open
         </div>
@@ -123,7 +166,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
     } else {
       return (
         <div
-          className=" plasmo-text-xs plasmo-cursor-pointer plasmo-bg-black/35 plasmo-rounded-xl plasmo-px-2 plasmo-text-white hover:plasmo-text-base"
+          className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white hover:text-base"
           onClick={download}>
           Download
         </div>

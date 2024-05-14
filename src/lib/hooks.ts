@@ -2,7 +2,8 @@ import { useState } from "react";
 import { concatenateArrayBuffers, fetchInBatches, getFetchDetails } from "./helper";
 
 interface IPartialFetchOption{
-    autoRetry:boolean
+    autoRetry?:boolean,
+    progress?:(percentage:number) => void
 }
 
 // max request once , total size is 20 * 1MB
@@ -19,10 +20,11 @@ export function usePartialFetch(){
     const partialFetch = async (
         url:string,
         options:IPartialFetchOption = {
-            autoRetry:true
+            autoRetry:true,
+            progress: () => {}
         }) => {
 
-        const {autoRetry} = options;
+        const {autoRetry,progress} = options;
 
 
         try {
@@ -53,7 +55,11 @@ export function usePartialFetch(){
                             }
                         })
                     }
-                    setPercentage((prev) => prev +  1/segmentCount)
+                    setPercentage((prev) => {
+                        const newProgress = prev +  1/segmentCount
+                        progress(newProgress)
+                        return newProgress
+                    })
                     return res.arrayBuffer()
                 })
                 })
@@ -68,16 +74,8 @@ export function usePartialFetch(){
             return URL.createObjectURL(blob)
         } catch (error) {
             console.log("🚀 ~ partialFetch ~ error:", error)
-            if(error instanceof Error){
-                if(error.message.startsWith("bytes=")){
-                    // auto retry
-
-
-                }
-                else{
-                    setError(error)
-                }
-            }
+            setError(error)
+            throw error
         }
         finally{
             setIsLoading(false);

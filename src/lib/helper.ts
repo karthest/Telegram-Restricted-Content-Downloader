@@ -1,3 +1,7 @@
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+import { Storage } from "@plasmohq/storage"
+
 export async function noop(ms:number) {
     return new Promise((res,rej) => {
         setTimeout(() => {
@@ -5,7 +9,6 @@ export async function noop(ms:number) {
         }, ms);
     })
 }
-
 
 export function concatenateArrayBuffers(arrayBuffers:ArrayBuffer[]){
     // Calculate the total length of all array buffers
@@ -38,7 +41,6 @@ export function downloadFile(url:string,fileName:string,fileType?:string){
     downloadLink.click()
 }
 
-
 export function waitForElement(selector:string) {
     return new Promise((resolve, reject) => {
       const element = document.querySelector(selector);
@@ -62,7 +64,6 @@ export function waitForElement(selector:string) {
       });
     });
 }
-
 
 export async function fetchInBatches<T>(promises: Array<() => Promise<T>>, maxCount: number,autoRetry:boolean) {
     const results: T[] = [];
@@ -91,12 +92,6 @@ export async function fetchInBatches<T>(promises: Array<() => Promise<T>>, maxCo
 
     return results;
 }
-
-
-export async function fetchBeginWith(range:string,) {
-    
-}
-
 
 export async function getFetchDetails(url:string){
     const requestHeaders: HeadersInit = {
@@ -132,3 +127,139 @@ export async function getFetchDetails(url:string){
         contentType,segmentCount,contentSize,segmentSize
     }
 }
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
+}
+
+export function decodeKVersionURL(kurl:string){
+    try {
+        const messageInfo = kurl.startsWith('https://web.telegram.org/k/stream/') ? kurl.slice("https://web.telegram.org/k/stream/".length) : kurl.slice("stream/".length);
+        const res = JSON.parse(decodeURIComponent(messageInfo)) as KVersionMediaInfo
+        console.log("🚀 ~ decodeKVersionURL ~ res:", res)
+        return res;
+    } catch (error) {
+        return {
+            dcId:0,
+            location:{
+                "_":'',
+                id:'',
+                "access_hash":"",
+                "file_reference":[],
+                size:0,
+                mimeType:"",
+                fileName:""
+            },
+            fileName:'',
+            size:0,
+            mimeType:''
+        } as KVersionMediaInfo
+    }
+}
+
+
+export const storage = new Storage({
+    area:'local'
+});
+export const IN_PROGRESS_TASKS = 'InProgress';
+export const SUCCESS_TASKS = 'Success';
+export const FAIL_TASKS = 'Fail';
+export const BADGE_COUNT = "Badge";
+
+export type KVersionMediaInfo = {
+    dcId:number,
+    location:{
+        "_":string,
+        id:string,
+        "access_hash":string,
+        "file_reference":Array<number>,
+        size:number,
+        mimeType:string,
+        fileName:string
+    }
+    size:number,
+    mimeType:string,
+    fileName:string
+}
+
+
+export class Message{
+    public source = 'TRCD'
+    public type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'resetBadge'
+    constructor(type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'resetBadge'){
+        this.type = type
+    }
+}
+
+
+export class DownloadSuccessMessage extends Message{
+    public contentType:"IMAGE" | "AUDIO" |"VIDEO"
+    public url:string
+    public name:string
+
+    constructor({
+        contentType,
+        url,
+        name
+    }:{
+        contentType:"IMAGE" | "AUDIO" |"VIDEO"
+        url:string
+        name:string
+    }){
+        super('Success')
+        this.contentType = contentType
+        this.url = url
+        this.name = name
+    }
+}
+
+export class DownloadInProgressMessage extends Message{
+    public contentType:"IMAGE" | "AUDIO" |"VIDEO"
+    public progress:number
+    public size:number | null // bytes
+    public url:string
+    public name:string
+
+    constructor({
+        contentType,
+        progress,
+        size, // bytes
+        url,
+        name
+    }:{
+        contentType:"IMAGE" | "AUDIO" |"VIDEO"
+        progress:number
+        size:number | null // bytes
+        url:string
+        name:string
+    }){
+        super('Inprogress')
+        this.contentType = contentType
+        this.progress = progress
+        this.size = size
+        this.url = url
+        this.name = name
+    }
+}
+
+export class DownloadFailMessage extends Message{
+    public contentType:"IMAGE" | "AUDIO" |"VIDEO"
+    public url:string
+    public name:string
+
+    constructor({
+        contentType,
+        url,
+        name
+    }:{
+        contentType:"IMAGE" | "AUDIO" |"VIDEO"
+        url:string
+        name:string
+    }){
+        super('Fail')
+        this.contentType = contentType
+        this.url = url
+        this.name = name
+    }
+}
+
