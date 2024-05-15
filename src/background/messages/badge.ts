@@ -11,7 +11,7 @@ const handler: PlasmoMessaging.MessageHandler<Message> = async (req, res) => {
                 chrome.action.setBadgeText({ text: (badgeCount + 1).toString()});
                 break;
             }
-            case "resetBadge":{
+            case "ResetBadge":{
                 await storage.set(BADGE_COUNT, 0)
                 chrome.action.setBadgeText({ text: ""});
                 break;

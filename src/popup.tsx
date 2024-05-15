@@ -52,7 +52,7 @@ function IndexPopUp() {
   useEffect(() => {
     sendToBackground({
       name: "badge",
-      body: new Message("resetBadge")
+      body: new Message("ResetBadge")
     })
   }, [])
 

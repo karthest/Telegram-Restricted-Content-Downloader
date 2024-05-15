@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { concatenateArrayBuffers, fetchInBatches, getFetchDetails } from "./helper";
+import { useEffect, useState } from "react";
+import { Message, fetchInBatches, getFetchDetails } from "./helper";
 
 interface IPartialFetchOption{
     autoRetry?:boolean,
@@ -65,15 +65,13 @@ export function usePartialFetch(){
                 })
             const bufferArray = await fetchInBatches(fetchPromises,MAX_FETCH_BATCH,autoRetry)
         
-            const buffer = concatenateArrayBuffers(bufferArray)
-        
-            // Create a Blob from the ArrayBuffer
-            const blob = new Blob([buffer], { type: contentType })
+            const blob = new Blob(bufferArray,{
+                type:contentType || 'application/octet-stream'
+            })
         
             // Create a URL representing the Blob
             return URL.createObjectURL(blob)
         } catch (error) {
-            console.log("🚀 ~ partialFetch ~ error:", error)
             setError(error)
             throw error
         }

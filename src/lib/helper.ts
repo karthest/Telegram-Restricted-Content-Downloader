@@ -10,30 +10,6 @@ export async function noop(ms:number) {
     })
 }
 
-export function concatenateArrayBuffers(arrayBuffers:ArrayBuffer[]){
-    // Calculate the total length of all array buffers
-    const totalLength = arrayBuffers.reduce(
-      (length, buffer) => length + buffer.byteLength,
-      0
-    )
-
-    // Create a new Uint8Array with the total length
-    const resultArray = new Uint8Array(totalLength)
-
-    // Use the set method to concatenate the array buffers
-    let offset = 0
-    for (const buffer of arrayBuffers) {
-      const sourceArray = new Uint8Array(buffer)
-      resultArray.set(sourceArray, offset)
-      offset += sourceArray.length
-    }
-
-    // Create a new ArrayBuffer from the concatenated Uint8Array
-    const concatenatedBuffer = resultArray.buffer
-
-    return concatenatedBuffer
-}
-
 export function downloadFile(url:string,fileName:string,fileType?:string){
     const downloadLink = document.createElement("a")
     downloadLink.href = url
@@ -185,8 +161,8 @@ export type KVersionMediaInfo = {
 
 export class Message{
     public source = 'TRCD'
-    public type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'resetBadge'
-    constructor(type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'resetBadge'){
+    public type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'ResetBadge' | 'FetchProgress'
+    constructor(type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'ResetBadge' | 'FetchProgress'){
         this.type = type
     }
 }
