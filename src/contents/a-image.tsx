@@ -15,6 +15,7 @@ import {
   DownloadSuccessMessage,
   Message
 } from "~lib/helper"
+import { useUserPlan } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/a/*"]
@@ -41,7 +42,9 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [hasTried, setHasTried] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const download: MouseEventHandler<HTMLDivElement> = (e) => {
+  const { imageCheck } = useUserPlan()
+
+  const download: MouseEventHandler<HTMLDivElement> = async (e) => {
     setHasTried(true)
     setIsLoading(true)
     e.stopPropagation()
@@ -52,6 +55,11 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
     const sourceName = downloadURL.split("/").slice(-1)[0] || "default.png"
     try {
+      const isAllowed = await imageCheck()
+      if (!isAllowed) {
+        //TODO notification
+        throw Error("Not Authorized")
+      }
       sendToBackground({
         name: "badge",
         body: new Message("IncrementBadge")

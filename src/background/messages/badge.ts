@@ -24,7 +24,7 @@ const handler: PlasmoMessaging.MessageHandler<Message> = async (req, res) => {
         console.error(error)
         res.send({
             code:0,
-            reason:error
+            data:error
         })
     }
 

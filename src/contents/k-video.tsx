@@ -1,4 +1,3 @@
-import type { useThrottleFn } from "ahooks"
 import cssText from "data-text:./video-image.css"
 import type {
   PlasmoCSConfig,
@@ -10,14 +9,16 @@ import { type FC, type MouseEventHandler } from "react"
 import { sendToBackground } from "@plasmohq/messaging"
 
 import {
+  BASIC_SIZE_LIMIT,
   decodeKVersionURL,
   DownloadFailMessage,
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
+  getAuthorization,
   Message
 } from "~lib/helper"
-import { usePartialFetch } from "~lib/hooks"
+import { usePartialFetch, useUserPlan } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"],
@@ -41,8 +42,10 @@ export const getStyle = () => {
 }
 
 const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
-  const { isLoading, hasTried, error, partialFetch, percentage } =
+  const { isLoading, hasTried, error, partialFetch, percentage, setError } =
     usePartialFetch()
+
+  const { videoCheck } = useUserPlan()
 
   const download: MouseEventHandler<HTMLDivElement> = async (e) => {
     const videoElement = anchor.element as HTMLVideoElement
@@ -70,8 +73,14 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
             }),
             "*"
           )
-        }
+        },
+        check: () => videoCheck(mediaInfo.size)
       })
+      if (videoURL === "") {
+        setError(true)
+        //TODO notification
+        throw Error("Not Authorized")
+      }
       downloadFile(videoURL, sourceName)
       // send success message to background
       window.postMessage(

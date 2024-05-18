@@ -12,10 +12,11 @@ import {
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
+  getAuthorization,
   Message,
   waitForElement
 } from "~lib/helper"
-import { usePartialFetch } from "~lib/hooks"
+import { usePartialFetch, useUserPlan } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"],
@@ -32,12 +33,15 @@ export const getStyle = () => {
 }
 
 const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
-  const { isLoading, hasTried, error, partialFetch, percentage } =
+  const { isLoading, hasTried, error, partialFetch, percentage, setError } =
     usePartialFetch()
+
+  const { audioCheck } = useUserPlan()
 
   const download: MouseEventHandler<HTMLDivElement> = async (e) => {
     e.stopPropagation()
     e.preventDefault()
+
     const mediaElement = anchor.element as HTMLDivElement
     const togglePlayElement = mediaElement.querySelector(
       "div.audio-toggle"
@@ -76,8 +80,15 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
             }),
             "*"
           )
-        }
+        },
+        check: audioCheck
       })
+
+      if (audioURL === "") {
+        setError(true)
+        //TODO notification
+        return
+      }
 
       downloadFile(audioURL, fileName)
       // send success message to background

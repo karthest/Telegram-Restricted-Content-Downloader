@@ -12,7 +12,6 @@ import { Badge } from "~/components/ui/badge"
 import { Progress } from "~/components/ui/progress"
 import { Button } from "~components/ui/button"
 import {
-  BADGE_COUNT,
   DownloadFailMessage,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
@@ -24,6 +23,8 @@ import {
 } from "~lib/helper"
 
 import "~style.css"
+
+import { User } from "lucide-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
@@ -58,6 +59,27 @@ function IndexPopUp() {
 
   const openFeedBackWindow = () => {
     window.open("https://t.me/+pHaZ8oHR-rZiZDI1")
+  }
+
+  const openSubscribeWindow = () => {
+    window.open(
+      `chrome-extension://${process.env.PLASMO_PUBLIC_EXTENSION_ID}/tabs/subscribe.html`
+    )
+  }
+
+  const openUserManagementPage = async () => {
+    try {
+      console.log(
+        "🚀 ~ openUserManagementPage ~ openUserManagementPage:",
+        openUserManagementPage
+      )
+      await sendToBackground({
+        name: "openUserManagementPage"
+      })
+    } catch (error) {
+      // notification
+      console.error(error)
+    }
   }
   return (
     <div className=" px-1 py-1 flex flex-col w-80">
@@ -117,8 +139,19 @@ function IndexPopUp() {
           ))}
         </AccordionItem>
       </Accordion>
+      <div className=" flex justify-around py-2 items-center">
+        <User className=" cursor-pointer" onClick={openUserManagementPage} />
+        <Button className=" w-1/3" onClick={openSubscribeWindow}>
+          Upgrade
+        </Button>
 
-      <Button onClick={openFeedBackWindow}>Feedback</Button>
+        <Button
+          className=" w-1/3"
+          variant="secondary"
+          onClick={openFeedBackWindow}>
+          Feedback
+        </Button>
+      </div>
     </div>
   )
 }

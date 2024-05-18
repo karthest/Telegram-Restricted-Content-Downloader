@@ -8,13 +8,15 @@ import type {
 import { type FC, type MouseEventHandler } from "react"
 
 import {
+  BASIC_SIZE_LIMIT,
   DownloadFailMessage,
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
+  getAuthorization,
   Message
 } from "~lib/helper"
-import { usePartialFetch } from "~lib/hooks"
+import { usePartialFetch, useUserPlan } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/a/*"],
@@ -31,8 +33,10 @@ export const getStyle = () => {
 }
 
 const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
-  const { isLoading, hasTried, error, partialFetch, percentage } =
+  const { isLoading, hasTried, error, partialFetch, percentage, setError } =
     usePartialFetch()
+
+  const { audioCheck } = useUserPlan()
 
   const download: MouseEventHandler<HTMLDivElement> = async (e) => {
     e.stopPropagation()
@@ -74,8 +78,14 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
             }),
             "*"
           )
-        }
+        },
+        check: audioCheck
       })
+      if (audioURL === "") {
+        setError(true)
+        //TODO notification
+        throw Error("Not Authorized")
+      }
 
       downloadFile(audioURL, fileName)
       // send success message to background

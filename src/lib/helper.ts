@@ -112,7 +112,6 @@ export function decodeKVersionURL(kurl:string){
     try {
         const messageInfo = kurl.startsWith('https://web.telegram.org/k/stream/') ? kurl.slice("https://web.telegram.org/k/stream/".length) : kurl.slice("stream/".length);
         const res = JSON.parse(decodeURIComponent(messageInfo)) as KVersionMediaInfo
-        console.log("🚀 ~ decodeKVersionURL ~ res:", res)
         return res;
     } catch (error) {
         return {
@@ -141,6 +140,13 @@ export const IN_PROGRESS_TASKS = 'InProgress';
 export const SUCCESS_TASKS = 'Success';
 export const FAIL_TASKS = 'Fail';
 export const BADGE_COUNT = "Badge";
+export const REMAIN_DOWNLOAD_COUNT = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+}
 
 export type KVersionMediaInfo = {
     dcId:number,
@@ -158,12 +164,26 @@ export type KVersionMediaInfo = {
     fileName:string
 }
 
+export type MessageType = 'Success' | 
+                            'Inprogress' | 
+                            'Fail' | 
+                            'Flush' | 
+                            'IncrementBadge' | 
+                            'ResetBadge' | 
+                            'FetchProgress' | 
+                            'OpenPaymentChoosePage' | 
+                            'GetAuthorization' | 
+                            'AuthorizationResult' | 
+                            'OpenLoginPage' | 
+                            'GetRemainDownloadCount' |
+                            'RemainDownloadCountResult'
 
 export class Message{
-    public source = 'TRCD'
-    public type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'ResetBadge' | 'FetchProgress'
-    constructor(type:'Success' | 'Inprogress' | 'Fail' | 'Flush' | 'IncrementBadge' | 'ResetBadge' | 'FetchProgress'){
+    public source: 'TRCD' | 'Service'
+    public type:MessageType
+    constructor(type: MessageType, source?:'TRCD' | 'Service'){
         this.type = type
+        this.source = source || 'TRCD'
     }
 }
 
@@ -239,3 +259,119 @@ export class DownloadFailMessage extends Message{
     }
 }
 
+
+export class AuthorizationResultMessage extends Message{
+    constructor(public authorization:boolean,public reason:'Not Login' | 'Online Count Limit'){
+        super('AuthorizationResult','Service')
+    }
+}
+
+export class RemainDownloadCountResultMessage extends Message{
+    constructor(public remainCount:number){
+        super('RemainDownloadCountResult','Service')
+    }
+}
+
+
+export class OpenPaymentChoosePageMessage extends Message{
+    constructor(public planID:string,public currency:'usd' | 'cny'){
+        super('OpenPaymentChoosePage')
+    }
+}
+
+
+export interface MessageRes<T> {
+    code: 0 | 1,
+    data:T
+}
+
+export interface SubscriptionInfo
+{
+    transaction_id: string
+    plan_type: "recurring" | "one_time"
+    order_status: null | "created" | "updated" | "canceling" | "canceled" | "pastdue" | "invalid"
+    pay_status: "created" | "succeed" | "failed" | "refunded"
+    plan_start: number
+    plan_end: number
+    currency: "usd" | "cny"
+    plan_price: number
+    plan_id: number
+    plan_name: string
+    channel: "stripe" | "alipay" | "wechat" | "paypal"
+    pay_time: number
+    prod_code: string
+    created_at: string
+    updated_at: string
+  }
+
+
+
+export function getAuthorization(){
+    window.postMessage(new Message("GetAuthorization"), "*");
+    return new Promise<'OK' | 'Not Login' | 'Online Count Limit'>((res,rej) => {
+        const listener = async (event:MessageEvent<Message>) => {
+            
+            if (event.source !== window || !event.data || event.data.source !== 'Service') {
+                return;
+            }
+            const data = event.data;
+            switch (data.type) {
+                case 'AuthorizationResult':{
+                    const authorizationResult = data as AuthorizationResultMessage
+                    if(authorizationResult.authorization){
+                        res('OK');
+                    }
+                    else if(authorizationResult.reason === 'Not Login'){
+                        console.log("🚀 ~ listener ~ authorizationResult:", authorizationResult)
+                        res('Not Login');
+                    }
+                    else if(authorizationResult.reason === 'Online Count Limit'){
+                        res('Online Count Limit');
+                    }
+                    break;
+                }
+                default:{
+                    rej('unknown')
+                    break;
+                }
+                    
+            }
+            window.removeEventListener('message',listener);
+        }
+        window.addEventListener('message', listener);
+    })
+    
+}
+
+
+export function getRemainDownloadCount(){
+    window.postMessage(new Message("GetRemainDownloadCount"), "*");
+    return new Promise<number>((res,rej) => {
+        const listener = async (event:MessageEvent<Message>) => {
+            
+            if (event.source !== window || !event.data || event.data.source !== 'Service') {
+                return;
+            }
+            const data = event.data;
+            console.log("🚀 ~ listener ~ data:", data)
+            switch (data.type) {
+                case 'RemainDownloadCountResult':{
+                    const count = (data as RemainDownloadCountResultMessage).remainCount
+                    res(count)
+                    break;
+                }
+                default:{
+                    rej('unknown')
+                    break;
+                }
+                    
+            }
+            window.removeEventListener('message',listener);
+        }
+        window.addEventListener('message', listener);
+    })
+}
+
+
+
+export const BASIC_SIZE_LIMIT = 1024 * 1024 * 10

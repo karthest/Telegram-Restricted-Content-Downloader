@@ -14,6 +14,7 @@ import {
   DownloadSuccessMessage,
   Message
 } from "~lib/helper"
+import { useUserPlan } from "~lib/hooks"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"]
@@ -40,6 +41,8 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const [success, setSuccess] = useState(false)
   const [hasTried, setHasTried] = useState(false)
 
+  const { imageCheck } = useUserPlan()
+
   const showHint =
     anchor.element.className.includes("media-photo") &&
     // many videos in one messageand not auto-play
@@ -64,7 +67,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
         element.matches("span.can-autoplay")
       ) > -1)
 
-  const download: MouseEventHandler<HTMLDivElement> = (e) => {
+  const download: MouseEventHandler<HTMLDivElement> = async (e) => {
     const imageElement = anchor.element as HTMLImageElement
     const downloadURL = imageElement.src
     setHasTried(true)
@@ -79,6 +82,11 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
         name: "badge",
         body: new Message("IncrementBadge")
       })
+      const isAllowed = await imageCheck()
+      if (!isAllowed) {
+        //notification
+        throw new Error("Not Authorized")
+      }
       // send in progress message to background
       sendToBackground({
         name: "progress",
@@ -126,6 +134,10 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const openVideo: MouseEventHandler<HTMLDivElement> = (e) => {
     const targetElement = anchor.element as HTMLImageElement
     targetElement.click()
+  }
+
+  const login: MouseEventHandler<HTMLDivElement> = () => {
+    window.postMessage(new Message("OpenLoginPage"), "*")
   }
 
   if (shouldNotRender) {

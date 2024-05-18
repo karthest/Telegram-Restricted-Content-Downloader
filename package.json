@@ -1,7 +1,7 @@
 {
     "name": "telegram-restricted-downloader",
     "displayName": "Telegram Restrcted Content Downloader",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "description": "A restricted content downloader for telegram",
     "author": "YZH",
     "scripts": {
@@ -13,14 +13,18 @@
         "@plasmohq/messaging": "^0.6.2",
         "@plasmohq/storage": "^1.10.0",
         "@radix-ui/react-accordion": "^1.1.2",
+        "@radix-ui/react-alert-dialog": "^1.0.5",
         "@radix-ui/react-progress": "^1.0.3",
         "@radix-ui/react-slot": "^1.0.2",
+        "@radix-ui/react-toast": "^1.1.5",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
+        "kodepay": "^2.1.2",
         "lucide-react": "^0.378.0",
         "plasmo": "0.86.2",
         "react": "18.2.0",
         "react-dom": "18.2.0",
+        "swr": "^2.2.5",
         "tailwind-merge": "^2.3.0",
         "tailwindcss": "3.4.1",
         "tailwindcss-animate": "^1.0.7"

@@ -1,0 +1,40 @@
+import type { PlasmoMessaging } from "@plasmohq/messaging"
+import { kodepayClient } from "~background"
+import { REMAIN_DOWNLOAD_COUNT, storage } from "~lib/helper"
+ 
+const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+    try {
+        const [count,subscriptions] = await Promise.all([
+            storage.get(REMAIN_DOWNLOAD_COUNT()),
+            kodepayClient.getValidSubscriptions()
+        ])
+        const resCount = count ?? 5
+
+
+        const hasValidSubscription = Array.isArray(subscriptions) && 
+            subscriptions.findIndex(s => ["created",'updated'].includes(s.order_status) && ['succeed'].includes(s.pay_status)) !== -1
+
+        // not login
+        if(subscriptions.code === 100011 || subscriptions.code === 401  || !hasValidSubscription){
+            res.send({
+                code:1,
+                data:resCount
+            })
+            return ;
+        }
+
+        res.send({
+            code:1,
+            data:999
+        })
+    } catch (error) {
+        console.error(error)
+        res.send({
+            code:0,
+            data:error.message
+        })
+    }
+
+}
+ 
+export default handler
