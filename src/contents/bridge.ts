@@ -68,6 +68,12 @@ window.addEventListener('message', async (event:MessageEvent<Message>) => {
             window.postMessage(new RemainDownloadCountResultMessage(res.code === 1 ? res.data :1),'*')
             break;
         }
+        case 'OpenSubscriptionPage':{
+            sendToBackground({
+                name:'openSubscribePage'
+            })
+            break;
+        }
         default:
             break;
     }

@@ -176,7 +176,8 @@ export type MessageType = 'Success' |
                             'AuthorizationResult' | 
                             'OpenLoginPage' | 
                             'GetRemainDownloadCount' |
-                            'RemainDownloadCountResult'
+                            'RemainDownloadCountResult' |
+                            'OpenSubscriptionPage'
 
 export class Message{
     public source: 'TRCD' | 'Service'
@@ -308,7 +309,7 @@ export interface SubscriptionInfo
 
 export function getAuthorization(){
     window.postMessage(new Message("GetAuthorization"), "*");
-    return new Promise<'OK' | 'Not Login' | 'Online Count Limit'>((res,rej) => {
+    return new Promise<'OK' | 'Not Login' | 'Online Count Limit' | 'No Valid Subscription'>((res,rej) => {
         const listener = async (event:MessageEvent<Message>) => {
             
             if (event.source !== window || !event.data || event.data.source !== 'Service') {
@@ -322,11 +323,13 @@ export function getAuthorization(){
                         res('OK');
                     }
                     else if(authorizationResult.reason === 'Not Login'){
-                        console.log("🚀 ~ listener ~ authorizationResult:", authorizationResult)
                         res('Not Login');
                     }
                     else if(authorizationResult.reason === 'Online Count Limit'){
                         res('Online Count Limit');
+                    }
+                    else if(authorizationResult.reason === 'No Valid Subscription'){
+                        res('No Valid Subscription')
                     }
                     break;
                 }

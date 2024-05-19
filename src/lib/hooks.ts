@@ -111,7 +111,9 @@ export function useUserPlan(){
 
     const imageCheck = async () => {
         const count = await getRemainDownloadCount();
-        if(count <= 0 ) window.postMessage(new Message('OpenLoginPage'),'*')
+        if(count <= 0 ){
+            window.postMessage(new Message('OpenSubscriptionPage'),'*')
+        } 
         return count > 0;
 
     }
@@ -129,10 +131,16 @@ export function useUserPlan(){
             // notification
             return false
           }
+          if( auth === 'No Valid Subscription'){
+            window.postMessage(new Message('OpenSubscriptionPage'),'*')
+            return false;
+          }
           return true
         } else{
             const count = await getRemainDownloadCount();
-            if(count <= 0) window.postMessage(new Message('OpenLoginPage'),'*')
+            if(count <= 0){
+                window.postMessage(new Message('OpenSubscriptionPage'),'*')
+            }
             return count > 0;
         }
     }
@@ -149,7 +157,10 @@ export function useUserPlan(){
             // notification
             return false
         }
-
+        if( auth === 'No Valid Subscription'){
+            window.postMessage(new Message('OpenSubscriptionPage'),'*')
+            return false;
+          }
         return true;
     }
 
