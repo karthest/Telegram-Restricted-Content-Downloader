@@ -10,12 +10,8 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
         ])
         const resCount = count ?? 5
 
-
-        const hasValidSubscription = Array.isArray(subscriptions) && 
-            subscriptions.findIndex(s => ["created",'updated'].includes(s.order_status) && ['succeed'].includes(s.pay_status)) !== -1
-
         // not login
-        if(subscriptions.code === 100011 || subscriptions.code === 401  || !hasValidSubscription){
+        if(subscriptions.code === 100011 || subscriptions.code === 401  || !subscriptions){
             res.send({
                 code:1,
                 data:resCount
