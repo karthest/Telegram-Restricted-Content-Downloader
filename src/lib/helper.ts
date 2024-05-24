@@ -268,7 +268,7 @@ export class AuthorizationResultMessage extends Message{
 }
 
 export class RemainDownloadCountResultMessage extends Message{
-    constructor(public remainCount:number){
+    constructor(public remainCount:number,public reason:'Not Login' | 'Online Count Limit' | 'No Valid Subscription'){
         super('RemainDownloadCountResult','Service')
     }
 }
@@ -349,18 +349,23 @@ export function getAuthorization(){
 
 export function getRemainDownloadCount(){
     window.postMessage(new Message("GetRemainDownloadCount"), "*");
-    return new Promise<number>((res,rej) => {
+    return new Promise<{
+        remainCount:number,
+        reason:string
+    }>((res,rej) => {
         const listener = async (event:MessageEvent<Message>) => {
             
             if (event.source !== window || !event.data || event.data.source !== 'Service') {
                 return;
             }
             const data = event.data;
-            console.log("🚀 ~ listener ~ data:", data)
             switch (data.type) {
                 case 'RemainDownloadCountResult':{
-                    const count = (data as RemainDownloadCountResultMessage).remainCount
-                    res(count)
+                    const {remainCount,reason} = (data as RemainDownloadCountResultMessage)
+                    res({
+                        remainCount,
+                        reason
+                    })
                     break;
                 }
                 default:{
@@ -377,4 +382,4 @@ export function getRemainDownloadCount(){
 
 
 
-export const BASIC_SIZE_LIMIT = 1024 * 1024 * 10
+export const BASIC_SIZE_LIMIT = 1024 * 1024 * 100

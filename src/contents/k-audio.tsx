@@ -12,7 +12,6 @@ import {
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
-  getAuthorization,
   Message,
   waitForElement
 } from "~lib/helper"

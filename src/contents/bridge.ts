@@ -65,7 +65,7 @@ window.addEventListener('message', async (event:MessageEvent<Message>) => {
             const res = await sendToBackground({
                 name:'getRemainDownloadCount'
             });
-            window.postMessage(new RemainDownloadCountResultMessage(res.code === 1 ? res.data :1),'*')
+            window.postMessage(new RemainDownloadCountResultMessage(res.code === 1 ? res.data.resCount:1,res.data.reason),'*')
             break;
         }
         case 'OpenSubscriptionPage':{

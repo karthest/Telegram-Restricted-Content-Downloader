@@ -110,57 +110,63 @@ export function usePartialFetch(){
 export function useUserPlan(){
 
     const imageCheck = async () => {
-        const count = await getRemainDownloadCount();
-        if(count <= 0 ){
-            window.postMessage(new Message('OpenSubscriptionPage'),'*')
+        const {remainCount,reason} = await getRemainDownloadCount();
+        if(remainCount <= 0 ){
+            if (reason === "Not Login") {
+                window.postMessage(new Message("OpenLoginPage"), "*")
+                return false
+              }
+              if (reason === "Online Count Limit") {
+                window.postMessage(new Message('OpenLoginPage'),'*')
+                // notification
+                return false
+              }
+              if( reason === 'No Valid Subscription'){
+                window.postMessage(new Message('OpenSubscriptionPage'),'*')
+                return false;
+              }
         } 
-        return count > 0;
+        return true;
 
     }
 
     const videoCheck = async (size) => {
-        if (size > BASIC_SIZE_LIMIT) {
-          const auth = await getAuthorization()
-
-          if (auth === "Not Login") {
-            window.postMessage(new Message("OpenLoginPage"), "*")
-            return false
-          }
-          if (auth === "Online Count Limit") {
-            window.postMessage(new Message('OpenLoginPage'),'*')
-            // notification
-            return false
-          }
-          if( auth === 'No Valid Subscription'){
-            window.postMessage(new Message('OpenSubscriptionPage'),'*')
-            return false;
-          }
-          return true
-        } else{
-            const count = await getRemainDownloadCount();
-            if(count <= 0){
+        const {remainCount,reason} = await getRemainDownloadCount();
+        if(remainCount <= 0 ){
+            if (reason === "Not Login") {
+                window.postMessage(new Message("OpenLoginPage"), "*")
+                return false
+              }
+              if (reason === "Online Count Limit") {
+                window.postMessage(new Message('OpenLoginPage'),'*')
+                // notification
+                return false
+              }
+              if( reason === 'No Valid Subscription'){
                 window.postMessage(new Message('OpenSubscriptionPage'),'*')
-            }
-            return count > 0;
-        }
+                return false;
+              }
+        } 
+        return true;
     }
 
     const audioCheck = async () => {
-        const auth = await getAuthorization()
-
-        if (auth === "Not Login") {
-            window.postMessage(new Message("OpenLoginPage"), "*")
-            return false
-        }
-        if (auth === "Online Count Limit") {
-            window.postMessage(new Message('OpenLoginPage'),'*')
-            // notification
-            return false
-        }
-        if( auth === 'No Valid Subscription'){
-            window.postMessage(new Message('OpenSubscriptionPage'),'*')
-            return false;
-          }
+        const {remainCount,reason} = await getRemainDownloadCount();
+        if(remainCount <= 0 ){
+            if (reason === "Not Login") {
+                window.postMessage(new Message("OpenLoginPage"), "*")
+                return false
+              }
+              if (reason === "Online Count Limit") {
+                window.postMessage(new Message('OpenLoginPage'),'*')
+                // notification
+                return false
+              }
+              if( reason === 'No Valid Subscription'){
+                window.postMessage(new Message('OpenSubscriptionPage'),'*')
+                return false;
+              }
+        } 
         return true;
     }
 

@@ -32,8 +32,7 @@ const subscriptionPlans = [
     planID: "Basic",
     features: {
       basic: [
-        "Download images and videos from any channel and chats 5 times per day",
-        "Video size limit: 10MB",
+        "Download images and videos from any channel and chats 3 times per day",
         "Free feature updates",
         "Human support"
       ],
@@ -49,14 +48,10 @@ const subscriptionPlans = [
         : "prod_90d4aa08cec243c4",
     features: {
       basic: [
-        "Download images and videos from any channel and chats with no limit",
+        "Download images and videos from any channel and chats",
         "Free feature updates"
       ],
-      advance: [
-        "Additional support for audio downloads",
-        "No limit on video size",
-        "High priority human support"
-      ]
+      advance: ["With No Limit", "High priority human support"]
     }
   },
   {
@@ -68,14 +63,10 @@ const subscriptionPlans = [
         : "prod_ea185d63f0074258",
     features: {
       basic: [
-        "Download images and videos from any channel and chats with no limit",
+        "Download images and videos from any channel and chats",
         "Free feature updates"
       ],
-      advance: [
-        "Additional support for audio downloads",
-        "No limit on video size",
-        "High priority human support"
-      ]
+      advance: ["With No Limit", "High priority human support"]
     }
   },
   {
@@ -87,14 +78,10 @@ const subscriptionPlans = [
         : "prod_ffde3e5ca6314c79",
     features: {
       basic: [
-        "Download images and videos from any channel and chats with no limit",
+        "Download images and videos from any channel and chats",
         "Free feature updates"
       ],
-      advance: [
-        "Additional support for audio downloads",
-        "No limit on video size",
-        "High priority human support"
-      ]
+      advance: ["With No Limit", "High priority human support"]
     }
   }
 ]

@@ -16,7 +16,7 @@ const handler: PlasmoMessaging.MessageHandler<void,MessageRes<Array<Subscription
         }
         res.send({
             code:1,
-            data:subscriptions.filter(s => ["created",'updated',''].includes(s.order_status) && ['succeed'].includes(s.pay_status))
+            data:subscriptions
         })
     } catch (error) {
         console.error(error)

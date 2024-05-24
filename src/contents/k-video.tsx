@@ -6,16 +6,12 @@ import type {
 } from "plasmo"
 import { type FC, type MouseEventHandler } from "react"
 
-import { sendToBackground } from "@plasmohq/messaging"
-
 import {
-  BASIC_SIZE_LIMIT,
   decodeKVersionURL,
   DownloadFailMessage,
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
-  getAuthorization,
   Message
 } from "~lib/helper"
 import { usePartialFetch, useUserPlan } from "~lib/hooks"

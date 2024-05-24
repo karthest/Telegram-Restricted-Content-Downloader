@@ -8,12 +8,10 @@ import type {
 import { type FC, type MouseEventHandler } from "react"
 
 import {
-  BASIC_SIZE_LIMIT,
   DownloadFailMessage,
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
-  getAuthorization,
   Message
 } from "~lib/helper"
 import { usePartialFetch, useUserPlan } from "~lib/hooks"
