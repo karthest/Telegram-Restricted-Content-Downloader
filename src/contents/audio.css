@@ -5,16 +5,16 @@
 @tailwind utilities;
 
 div#plasmo-shadow-container {
-    position: absolute !important;
-    right: -5rem;
-    top: 0;
+  position: absolute !important;
+  right: -5rem;
+  top: 0;
 }
 
 div.plasmo-csui-container {
-    width: 100%;
-    padding: 1rem calc(3rem / 16) 0 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items: center;
+  width: 100%;
+  padding: 1rem calc(3rem / 16) 0 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
 }

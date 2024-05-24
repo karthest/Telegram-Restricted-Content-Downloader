@@ -115,21 +115,21 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
   if (isLoading) {
     return (
-      <div className=" text-xs cursor-pointer rounded-xl px-2 text-white">
+      <div className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white">
         {`${(percentage * 100).toFixed(2)}%`}
       </div>
     )
   } else if (hasTried) {
     if (!error) {
       return (
-        <div className=" text-xs cursor-pointer  rounded-xl px-2 text-green-500">
+        <div className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-green-500">
           Saved!
         </div>
       )
     } else {
       return (
         <div
-          className=" text-xs cursor-pointer  rounded-xl px-2 text-red-500 "
+          className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-red-500 "
           onClick={download}>
           Retry
         </div>
@@ -138,7 +138,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   } else
     return (
       <div
-        className=" text-xs cursor-pointer  rounded-xl px-2 text-white"
+        className=" text-xs cursor-pointer bg-black/35 rounded-xl px-2 text-white hover:text-base"
         onClick={download}>
         Download
       </div>

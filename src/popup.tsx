@@ -9,8 +9,19 @@ import {
   AccordionTrigger
 } from "~/components/ui/accordion"
 import { Badge } from "~/components/ui/badge"
+import { Button } from "~/components/ui/button"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "~/components/ui/popover"
 import { Progress } from "~/components/ui/progress"
-import { Button } from "~components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "~/components/ui/tooltip"
 import {
   DownloadFailMessage,
   DownloadInProgressMessage,
@@ -24,7 +35,7 @@ import {
 
 import "~style.css"
 
-import { User } from "lucide-react"
+import { LogOut, ReceiptText, User } from "lucide-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
@@ -69,12 +80,19 @@ function IndexPopUp() {
 
   const openUserManagementPage = async () => {
     try {
-      console.log(
-        "🚀 ~ openUserManagementPage ~ openUserManagementPage:",
-        openUserManagementPage
-      )
       await sendToBackground({
         name: "openUserManagementPage"
+      })
+    } catch (error) {
+      // notification
+      console.error(error)
+    }
+  }
+
+  const Logout = async () => {
+    try {
+      await sendToBackground({
+        name: "logout"
       })
     } catch (error) {
       // notification
@@ -140,7 +158,28 @@ function IndexPopUp() {
         </AccordionItem>
       </Accordion>
       <div className=" flex justify-around py-2 items-center">
-        <User className=" cursor-pointer" onClick={openUserManagementPage} />
+        <TooltipProvider delayDuration={200}>
+          <Tooltip>
+            <TooltipTrigger>
+              <User
+                className=" cursor-pointer"
+                onClick={openUserManagementPage}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Receipts</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <LogOut className=" cursor-pointer" onClick={Logout}></LogOut>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Log out</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <Button className=" w-1/3" onClick={openSubscribeWindow}>
           Upgrade
         </Button>

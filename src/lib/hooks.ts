@@ -77,8 +77,8 @@ export function usePartialFetch(){
             const blob = new Blob(bufferArray,{
                 type:contentType || 'application/octet-stream'
             })
-            
             console.log("🚀 ~ usePartialFetch ~ contentType:", contentType)
+            setError(false);
 
             
         

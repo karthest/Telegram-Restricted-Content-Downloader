@@ -4,7 +4,7 @@ import type {
   PlasmoCSUIProps,
   PlasmoGetInlineAnchorList
 } from "plasmo"
-import { useState, type FC, type MouseEventHandler } from "react"
+import { useEffect, useState, type FC, type MouseEventHandler } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
@@ -46,23 +46,23 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const showHint =
     anchor.element.className.includes("media-photo") &&
     // many videos in one messageand not auto-play
-    (Array.from(anchor.element.parentElement.children).findIndex(
-      (element) =>
-        element.tagName === "BUTTON" && element.className.includes("video-play")
+    (Array.from(anchor.element.parentElement.children).findIndex((element) =>
+      element.matches("button.video-play")
     ) > -1 ||
       // single video in one message and not auto-play
       Array.from(anchor.element.parentElement.parentElement.children).findIndex(
-        (element) =>
-          element.tagName === "BUTTON" &&
-          element.className.includes("video-play")
+        (element) => element.matches("button.video-play")
       ) > -1)
 
-  // When the message is a single video and the sibling dom or parents' sibling dom has span.can-autoplay, which means the video can be played once the page loaded, so img download button should not be displayed.
   const shouldNotRender =
+    !showHint &&
     anchor.element.className.includes("media-photo") &&
-    (Array.from(anchor.element.parentElement.parentElement.children).findIndex(
-      (element) => element.matches("span.can-autoplay")
+    (Array.from(anchor.element.parentElement.children).findIndex((element) =>
+      element.matches("span.video-time")
     ) > -1 ||
+      Array.from(anchor.element.parentElement.parentElement.children).findIndex(
+        (element) => element.matches("span.can-autoplay")
+      ) > -1 ||
       Array.from(anchor.element.parentElement.children).findIndex((element) =>
         element.matches("span.can-autoplay")
       ) > -1)
@@ -134,10 +134,6 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
   const openVideo: MouseEventHandler<HTMLDivElement> = (e) => {
     const targetElement = anchor.element as HTMLImageElement
     targetElement.click()
-  }
-
-  const login: MouseEventHandler<HTMLDivElement> = () => {
-    window.postMessage(new Message("OpenLoginPage"), "*")
   }
 
   if (shouldNotRender) {
