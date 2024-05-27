@@ -12,6 +12,7 @@ import {
   downloadFile,
   DownloadInProgressMessage,
   DownloadSuccessMessage,
+  getRandomName,
   Message
 } from "~lib/helper"
 import { usePartialFetch, useUserPlan } from "~lib/hooks"
@@ -52,7 +53,10 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
     const downloadURL = videoElement.src
     const mediaInfo = decodeKVersionURL(downloadURL)
     const sourceName =
-      mediaInfo.location.fileName || mediaInfo.fileName || mediaInfo.location.id
+      mediaInfo.location.fileName ||
+      mediaInfo.fileName ||
+      mediaInfo.location.id ||
+      getRandomName() // GIF
 
     try {
       window.postMessage(new Message("IncrementBadge"), "*")

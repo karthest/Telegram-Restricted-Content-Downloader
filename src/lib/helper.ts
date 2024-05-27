@@ -132,6 +132,10 @@ export function decodeKVersionURL(kurl:string){
     }
 }
 
+export function getRandomName(){
+    return Math.random().toFixed(20).slice(2)
+}
+
 
 export const storage = new Storage({
     area:'local'
