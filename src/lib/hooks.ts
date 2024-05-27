@@ -33,6 +33,11 @@ export function usePartialFetch(){
             setIsLoading(true);
             setHasTried(true);
 
+            if(url.startsWith('blob:')){
+                setError(false)
+                return url;
+            }
+
             const {segmentCount,segmentSize,contentSize,contentType} = await getFetchDetails(url);
 
             if(check){
@@ -77,7 +82,6 @@ export function usePartialFetch(){
             const blob = new Blob(bufferArray,{
                 type:contentType || 'application/octet-stream'
             })
-            console.log("🚀 ~ usePartialFetch ~ contentType:", contentType)
             setError(false);
 
             
