@@ -19,6 +19,7 @@ import useSWR from "swr"
 
 import { Badge } from "~components/ui/badge"
 import {
+  BASIC_PLAN_DOWNLOAD_LIMIT,
   cn,
   OpenPaymentChoosePageMessage,
   type MessageRes,
@@ -32,7 +33,7 @@ const subscriptionPlans = [
     planID: "Basic",
     features: {
       basic: [
-        "Download images and videos from any channel and chats 3 times per day",
+        `Download images and videos from any channel and chats ${BASIC_PLAN_DOWNLOAD_LIMIT} times per day`,
         "Free feature updates",
         "Human support"
       ],
