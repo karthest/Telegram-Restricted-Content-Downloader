@@ -1,6 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 import { kodepayClient } from "~background"
-import { REMAIN_DOWNLOAD_COUNT, storage } from "~lib/helper"
+import { BASIC_PLAN_DOWNLOAD_LIMIT, REMAIN_DOWNLOAD_COUNT, storage } from "~lib/helper"
  
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     try {
@@ -8,7 +8,8 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
             storage.get(REMAIN_DOWNLOAD_COUNT()),
             kodepayClient.getValidSubscriptions()
         ])
-        const resCount = count ?? 3
+        const resCount = count ?? BASIC_PLAN_DOWNLOAD_LIMIT
+
 
         if(subscriptions.code === 100011){
             res.send({

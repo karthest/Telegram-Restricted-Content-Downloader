@@ -1,9 +1,9 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
-import { DownloadInProgressMessage, IN_PROGRESS_TASKS, REMAIN_DOWNLOAD_COUNT, SUCCESS_TASKS, storage, type DownloadSuccessMessage } from "~lib/helper"
+import { BASIC_PLAN_DOWNLOAD_LIMIT, DownloadInProgressMessage, IN_PROGRESS_TASKS, REMAIN_DOWNLOAD_COUNT, SUCCESS_TASKS, storage, type DownloadSuccessMessage } from "~lib/helper"
  
 const handler: PlasmoMessaging.MessageHandler<DownloadSuccessMessage> = async (req, res) => {
     try {
-        const [prevInProgressValue = [],prevSuccessValue = [],count = 5] = await Promise.all([
+        const [prevInProgressValue,prevSuccessValue,count] = await Promise.all([
             storage.get(IN_PROGRESS_TASKS) as Promise<Array<DownloadInProgressMessage>>,
             storage.get(SUCCESS_TASKS) as Promise<Array<DownloadSuccessMessage>>,
             storage.get(REMAIN_DOWNLOAD_COUNT()) as Promise<number>
@@ -11,7 +11,7 @@ const handler: PlasmoMessaging.MessageHandler<DownloadSuccessMessage> = async (r
 
         const prevInProgressValueRes = prevInProgressValue || []
         const prevSuccessValueRes = prevSuccessValue || []
-        const countRes = count ?? 5
+        const countRes = count ?? BASIC_PLAN_DOWNLOAD_LIMIT
 
         const newInProgressValue = prevInProgressValueRes;
     

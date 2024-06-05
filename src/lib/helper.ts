@@ -144,6 +144,7 @@ export const IN_PROGRESS_TASKS = 'InProgress';
 export const SUCCESS_TASKS = 'Success';
 export const FAIL_TASKS = 'Fail';
 export const BADGE_COUNT = "Badge";
+export const BASIC_PLAN_DOWNLOAD_LIMIT = 3;
 export const REMAIN_DOWNLOAD_COUNT = () => {
     const date = new Date();
     const year = date.getFullYear();
