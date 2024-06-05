@@ -52,7 +52,7 @@ const subscriptionPlans = [
         "Download images and videos from any channel and chats",
         "Free feature updates"
       ],
-      advance: ["With No Limit", "High priority human support"]
+      advance: ["No Limit", "High priority human support"]
     }
   },
   {
@@ -67,7 +67,7 @@ const subscriptionPlans = [
         "Download images and videos from any channel and chats",
         "Free feature updates"
       ],
-      advance: ["With No Limit", "High priority human support"]
+      advance: ["No Limit", "High priority human support"]
     }
   },
   {
@@ -82,7 +82,7 @@ const subscriptionPlans = [
         "Download images and videos from any channel and chats",
         "Free feature updates"
       ],
-      advance: ["With No Limit", "High priority human support"]
+      advance: ["No Limit", "High priority human support"]
     }
   }
 ]
