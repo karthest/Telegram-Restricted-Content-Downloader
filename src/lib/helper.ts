@@ -387,4 +387,37 @@ export function getRemainDownloadCount(){
 
 
 
+export async function fetchCanvasMedia(canvasElement:HTMLCanvasElement){
+    return new Promise<string>((res,rej) => {
+        const chunks = [];
+        const mediaStream = canvasElement.captureStream()
+
+        const mediaRecorder = new MediaRecorder(mediaStream, {
+            mimeType: "video/webm"
+        })
+        mediaRecorder.addEventListener('start',() => {
+            console.log(`mediaRecorder start`)
+        })
+
+        mediaRecorder.addEventListener('error',(event) => {
+            rej('error')
+        })
+        mediaRecorder.addEventListener('dataavailable', (event) => {
+            if (event.data.size > 0) {
+                chunks.push(event.data);
+            }
+        })
+        mediaRecorder.addEventListener('stop', () =>{
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            res(URL.createObjectURL(blob));
+        })
+        mediaRecorder.start(300)
+        setTimeout(() => {
+            mediaRecorder.stop()
+        }, 2000);
+    })
+}
+
+
+
 export const BASIC_SIZE_LIMIT = 1024 * 1024 * 100

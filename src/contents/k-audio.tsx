@@ -46,18 +46,23 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
       "div.audio-toggle"
     ) as HTMLDivElement
     togglePlayElement.click()
-    const htmlFileName = mediaElement
+    let htmlFileName = mediaElement
       .querySelector("middle-ellipsis-element")
       ?.textContent?.split("…")?.[0]
+
     if (htmlFileName === undefined) {
-      // can't find the audio
-      return
+      // voice
+      htmlFileName = "blob"
     }
     const selector = `audio[src*="${encodeURIComponent(htmlFileName)}"]`
 
     const audioElement = (await waitForElement(selector)) as HTMLAudioElement
 
     const downloadURL = audioElement.src
+    console.log(
+      "🚀 ~ constdownload:MouseEventHandler<HTMLDivElement>= ~ downloadURL:",
+      downloadURL
+    )
 
     const mediaInfo = decodeKVersionURL(downloadURL)
 
@@ -66,6 +71,7 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
 
     try {
       window.postMessage(new Message("IncrementBadge"), "*")
+
       const audioURL = await partialFetch(downloadURL, {
         progress: (percentage) => {
           // send in progress message to background
