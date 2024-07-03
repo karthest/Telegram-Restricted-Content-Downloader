@@ -22,12 +22,12 @@ export const config: PlasmoCSConfig = {
   world: "MAIN"
 }
 
-// section.bubbles-date-group video ---> preview
-// div.media-viewer-aspecter video ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
-    section.bubbles-date-group video,
+    div.attachment > video,
+    div.media-round > video,
+    div.media-container-aspecter > video,
     div.media-viewer-aspecter video
     `
   )

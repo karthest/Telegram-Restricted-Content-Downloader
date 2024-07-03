@@ -20,12 +20,13 @@ export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"]
 }
 
-// section.bubbles-date-group img.media-photo ---> preview
-// div.media-viewer-aspecter img.thumbnail ---> detail
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
-    section.bubbles-date-group img.media-photo,
+    div.attachment > img.media-photo,
+    div.attachment > img.media-sticker,
+    div.album-item-media img.media-photo,
+
     div.media-viewer-aspecter img.thumbnail
     `
   )
@@ -55,17 +56,20 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
       ) > -1)
 
   const shouldNotRender =
-    !showHint &&
-    anchor.element.className.includes("media-photo") &&
-    (Array.from(anchor.element.parentElement.children).findIndex((element) =>
-      element.matches("span.video-time")
-    ) > -1 ||
-      Array.from(anchor.element.parentElement.parentElement.children).findIndex(
-        (element) => element.matches("span.can-autoplay")
+    (!showHint &&
+      anchor.element.className.includes("media-photo") &&
+      (Array.from(anchor.element.parentElement.children).findIndex((element) =>
+        element.matches("span.video-time")
       ) > -1 ||
-      Array.from(anchor.element.parentElement.children).findIndex((element) =>
-        element.matches("span.can-autoplay")
-      ) > -1)
+        Array.from(
+          anchor.element.parentElement.parentElement.children
+        ).findIndex((element) => element.matches("span.can-autoplay")) > -1 ||
+        Array.from(anchor.element.parentElement.children).findIndex((element) =>
+          element.matches("span.can-autoplay")
+        ) > -1)) ||
+    Array.from(anchor.element.parentElement.children).findIndex((element) =>
+      element.matches("div.media-round")
+    ) > -1
 
   const download: MouseEventHandler<HTMLDivElement> = async (e) => {
     const imageElement = anchor.element as HTMLImageElement

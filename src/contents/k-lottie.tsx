@@ -24,11 +24,10 @@ export const config: PlasmoCSConfig = {
   matches: ["https://web.telegram.org/k/*"]
 }
 
-// section.bubbles-date-group canvas.rlottie ---> preview
 export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () =>
   document.querySelectorAll(
     `
-    section.bubbles-date-group canvas.rlottie
+    div.attachment>canvas.rlottie
     `
   )
 

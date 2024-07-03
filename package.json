@@ -1,8 +1,8 @@
 {
     "name": "telegram-restricted-downloader",
     "displayName": "Telegram Restrcted Content Downloader",
-    "version": "3.8.0",
-    "description": "A restricted content downloader for telegram",
+    "version": "3.9.0",
+    "description": "A restricted content downloader for telegram, download image, video, sticker, audio, voice message",
     "author": "YZH",
     "scripts": {
         "dev": "plasmo dev",
