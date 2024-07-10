@@ -3,6 +3,9 @@ import React from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import { ToastAction } from "~/components/ui/toast"
+import { Toaster } from "~/components/ui/toaster"
+import { useToast } from "~/components/ui/use-toast"
 import { Button } from "~components/ui/button"
 import {
   Card,
@@ -37,7 +40,7 @@ const subscriptionPlans = [
         "Free feature updates",
         "Human support"
       ],
-      advance: []
+      advance: [`No Limit Downloading in 1 day`]
     }
   },
   {
@@ -87,12 +90,49 @@ const subscriptionPlans = [
   }
 ]
 
+const newSubscriptionPlan = [
+  {
+    name: "Basic",
+    price: "Free",
+    planID: "Basic",
+    features: {
+      basic: [
+        `Download images, videos, audios, stickers from any channel and chats ${BASIC_PLAN_DOWNLOAD_LIMIT} times per day`,
+        "Free feature updates",
+        "Human support"
+      ],
+      advance: [`No Limit Downloading these days`]
+    }
+  },
+  {
+    name: "Premium",
+    price: "$5.99",
+    planID:
+      process.env.NODE_ENV === "production"
+        ? "prod_28977d136dd246cc"
+        : "prod_f4ef9b324f9f46ca",
+    features: {
+      basic: [
+        "Download images, videos, audios, stickers from any channel and chats",
+        "Free feature updates"
+      ],
+      advance: ["No Limit", "High priority human support"]
+    }
+  }
+]
+
 const SubscriptionPage: React.FC = () => {
   const { data, error, isLoading } = useSWR("getValidSubscription", (name) =>
     sendToBackground<void, MessageRes<Array<SubscriptionInfo>>>({
       name
     })
   )
+
+  const { toast } = useToast()
+
+  const openFeedBackWindow = () => {
+    window.open("https://t.me/+pHaZ8oHR-rZiZDI1")
+  }
 
   const currentPlanID =
     (!error &&
@@ -110,7 +150,16 @@ const SubscriptionPage: React.FC = () => {
       })
     } catch (error) {
       console.error(error)
-      //TODO notification
+      toast({
+        variant: "destructive",
+        title: "Fail",
+        description: "Something is wrong",
+        action: (
+          <ToastAction altText="Feedback" onClick={openFeedBackWindow}>
+            Feedback
+          </ToastAction>
+        )
+      })
     }
   }
 
@@ -119,12 +168,12 @@ const SubscriptionPage: React.FC = () => {
       <h1 className="text-4xl font-semibold mb-12 text-center">
         Subscription Plans
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {subscriptionPlans.map((plan) => (
+      <div className=" flex justify-center">
+        {newSubscriptionPlan.map((plan) => (
           <Card
             key={plan.planID}
             className={cn(
-              " flex flex-col",
+              " flex flex-col w-[20rem] flex-initial mr-8",
               plan.planID === "prod_ea185d63f0074258" ? " border-primary" : ""
             )}>
             <CardHeader className=" flex-grow-0">
@@ -189,6 +238,7 @@ const SubscriptionPage: React.FC = () => {
           </Card>
         ))}
       </div>
+      <Toaster />
     </div>
   )
 }
