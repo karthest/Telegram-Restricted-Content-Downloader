@@ -101,7 +101,7 @@ const newSubscriptionPlan = [
         "Free feature updates",
         "Human support"
       ],
-      advance: [`No Limit Downloading these days`]
+      advance: []
     }
   },
   {
@@ -134,13 +134,17 @@ const SubscriptionPage: React.FC = () => {
     window.open("https://t.me/+pHaZ8oHR-rZiZDI1")
   }
 
-  const currentPlanID =
-    (!error &&
-      !isLoading &&
-      data.code === 1 &&
-      data.data.length > 0 &&
-      data.data[0].prod_code) ||
-    "Basic"
+  const getCurrentPlanId = () => {
+    if (error || isLoading || data.code !== 1 || data.data.length === 0) {
+      return null
+    }
+    const prodCode = data.data[0].prod_code
+    if (subscriptionPlans.findIndex((plan) => plan.planID === prodCode) > -1)
+      return newSubscriptionPlan[1].planID
+    else return prodCode
+  }
+
+  const currentPlanID = getCurrentPlanId()
 
   const openPaymentChoosePage = async (planID: string) => {
     try {
@@ -162,7 +166,6 @@ const SubscriptionPage: React.FC = () => {
       })
     }
   }
-
   return (
     <div className="container h-screen flex flex-col mx-auto px-4 py-8 pt-52">
       <h1 className="text-4xl font-semibold mb-12 text-center">
@@ -224,7 +227,10 @@ const SubscriptionPage: React.FC = () => {
                   Your plan
                 </Button>
               ) : plan.name === "Basic" ? (
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  key={Math.random()}>
                   Free
                 </Button>
               ) : (

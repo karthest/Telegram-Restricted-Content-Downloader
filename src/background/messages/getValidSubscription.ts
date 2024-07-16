@@ -5,7 +5,6 @@ import  { type MessageRes, type SubscriptionInfo } from "~lib/helper"
 const handler: PlasmoMessaging.MessageHandler<void,MessageRes<Array<SubscriptionInfo>>> = async (req, res) => {
     try {
         const subscriptions = await kodepayClient.getValidSubscriptions()
-        console.log("🚀 ~ consthandler:PlasmoMessaging.MessageHandler<void,MessageRes<Array<SubscriptionInfo>>>= ~ subscriptions:", subscriptions)
         if(subscriptions.code === 100011){
             throw new Error('Not Login')
         }

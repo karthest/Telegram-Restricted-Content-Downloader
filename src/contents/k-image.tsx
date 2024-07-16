@@ -87,6 +87,10 @@ const CustomButton: FC<PlasmoCSUIProps> = ({ anchor }) => {
         body: new Message("IncrementBadge")
       })
       const isAllowed = await imageCheck()
+      console.log(
+        "🚀 ~ constdownload:MouseEventHandler<HTMLDivElement>= ~ isAllowed:",
+        isAllowed
+      )
       if (!isAllowed) {
         //notification
         throw new Error("Not Authorized")
