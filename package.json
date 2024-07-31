@@ -1,8 +1,8 @@
 {
     "name": "telegram-restricted-downloader",
-    "displayName": "Telegram Restrcted Content Downloader",
-    "version": "3.11.0",
-    "description": "A restricted content downloader for telegram, download image, video, sticker, audio, voice message",
+    "displayName": "Telegram Restrcted Content Downloader - TG Downloader",
+    "version": "3.11.1",
+    "description": "A restricted content downloader for telegram or TG, download image, video, sticker, audio, voice message, which enhance your TG experience",
     "author": "YZH",
     "scripts": {
         "dev": "plasmo dev",
@@ -23,7 +23,7 @@
         "clsx": "^2.1.1",
         "kodepay": "^2.1.2",
         "lucide-react": "^0.378.0",
-        "plasmo": "0.86.2",
+        "plasmo": "0.88.0",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "swr": "^2.2.5",
