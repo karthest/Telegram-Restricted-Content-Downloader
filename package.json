@@ -1,12 +1,12 @@
 {
     "name": "telegram-restricted-downloader",
     "displayName": "Telegram Restrcted Content Downloader - TG Downloader",
-    "version": "3.11.1",
+    "version": "3.12",
     "description": "A restricted content downloader for telegram or TG, use it to download image, video, sticker, audio, voice message",
     "author": "YZH",
     "scripts": {
         "dev": "plasmo dev",
-        "build": "plasmo build",
+        "build": "plasmo build --source-maps",
         "package": "plasmo package && node assets.mjs"
     },
     "dependencies": {
@@ -19,6 +19,8 @@
         "@radix-ui/react-slot": "^1.0.2",
         "@radix-ui/react-toast": "^1.1.5",
         "@radix-ui/react-tooltip": "^1.0.7",
+        "@sentry/cli": "^2.35.0",
+        "@sentry/react": "^8.28.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "kodepay": "^2.1.2",

@@ -1,19 +1,22 @@
-import type { PlasmoMessaging } from "@plasmohq/messaging"
- 
+import type { PlasmoMessaging } from "@plasmohq/messaging";
+
+import { reportError } from "~lib/helper";
+
 const handler: PlasmoMessaging.MessageHandler<void> = async (req, res) => {
     try {
-        chrome.tabs.create({ url: `chrome-extension://${process.env.PLASMO_PUBLIC_EXTENSION_ID}/tabs/subscribe.html` });
+        chrome.tabs.create({
+            url: `chrome-extension://${process.env.PLASMO_PUBLIC_EXTENSION_ID}/tabs/subscribe.html`
+        });
         res.send({
-            code:1,
-        })
+            code: 1
+        });
     } catch (error) {
-        console.error(error)
+        reportError(error);
         res.send({
-            code:0,
-            data:error
-        })
+            code: 0,
+            data: error
+        });
     }
+};
 
-}
- 
-export default handler
+export default handler;

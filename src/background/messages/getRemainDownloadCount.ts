@@ -1,61 +1,65 @@
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-import { kodepayClient } from "~background"
-import { BASIC_PLAN_DOWNLOAD_LIMIT, REMAIN_DOWNLOAD_COUNT, storage } from "~lib/helper"
- 
+import type { PlasmoMessaging } from "@plasmohq/messaging";
+
+import { kodepayClient } from "~background";
+import {
+    BASIC_PLAN_DOWNLOAD_LIMIT,
+    REMAIN_DOWNLOAD_COUNT,
+    reportError,
+    storage
+} from "~lib/helper";
+
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     try {
-        const [count,subscriptions] = await Promise.all([
+        const [count, subscriptions] = await Promise.all([
             storage.get(REMAIN_DOWNLOAD_COUNT()),
             kodepayClient.getValidSubscriptions()
-        ])
-        const resCount = count ?? BASIC_PLAN_DOWNLOAD_LIMIT
+        ]);
+        const resCount = count ?? BASIC_PLAN_DOWNLOAD_LIMIT;
 
-
-        if(subscriptions.code === 100011){
+        if (subscriptions.code === 100011) {
             res.send({
-                code:1,
-                data:{
+                code: 1,
+                data: {
                     resCount,
-                    reason:'Not Login'
+                    reason: "Not Login"
                 }
-            })
-            return ;
+            });
+            return;
         }
-        if(subscriptions.code === 401){
+        if (subscriptions.code === 401) {
             res.send({
-                code:1,
-                data:{
+                code: 1,
+                data: {
                     resCount,
-                    reason:'Online Count Limit'
+                    reason: "Online Count Limit"
                 }
-            })
-            return ;
+            });
+            return;
         }
-        if(subscriptions.length === 0){
+        if (subscriptions.length === 0) {
             res.send({
-                code:1,
-                data:{
+                code: 1,
+                data: {
                     resCount,
-                    reason:'No Valid Subscription'
+                    reason: "No Valid Subscription"
                 }
-            })
-            return ;
+            });
+            return;
         }
 
         res.send({
-            code:1,
-            data:{
-                resCount,
+            code: 1,
+            data: {
+                resCount
             }
-        })
+        });
     } catch (error) {
-        console.error(error)
+        reportError(error);
         res.send({
-            code:0,
-            data:error.message
-        })
+            code: 0,
+            data: error.message
+        });
     }
+};
 
-}
- 
-export default handler
+export default handler;
