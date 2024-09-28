@@ -1,7 +1,7 @@
 {
     "name": "telegram-restricted-downloader",
     "displayName": "Telegram Restrcted Content Downloader - TG Downloader",
-    "version": "3.12.1",
+    "version": "3.12.2",
     "description": "A restricted content downloader for telegram or TG, use it to download image, video, sticker, audio, voice message",
     "author": "YZH",
     "scripts": {
