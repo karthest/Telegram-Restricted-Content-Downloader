@@ -6,7 +6,8 @@
     "author": "YZH",
     "scripts": {
         "dev": "plasmo dev",
-        "build": "plasmo build --source-maps && pnpm sentry:sourcemaps",
+        "build": "plasmo build",
+        "build:sentry": "plasmo build --source-maps && pnpm sentry:sourcemaps",
         "package": "plasmo package && node assets.mjs",
         "sentry:sourcemaps": "sentry-cli sourcemaps inject --org trcd --project javascript-react ./build/chrome-mv3-prod && sentry-cli sourcemaps upload --org trcd --project javascript-react ./build/chrome-mv3-prod"
     },

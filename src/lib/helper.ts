@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/react";
+// import * as Sentry from "@sentry/react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -451,11 +451,11 @@ export async function fetchCanvasMedia(canvasElement: HTMLCanvasElement) {
 }
 
 export function reportError(error) {
-    return Sentry.captureException(error, {
-        tags: {
-            manually: true
-        }
-    });
+    // return Sentry.captureException(error, {
+    //     tags: {
+    //         manually: true
+    //     }
+    // });
 }
 
 export const BASIC_SIZE_LIMIT = 1024 * 1024 * 100;
