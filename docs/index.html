@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TRCD — Download Everything from Telegram</title>
+    <meta name="description"
+        content="Download everything and bypass all restrictions from Telegram using TRCD. Experience unrestricted access with our Telegram Restricted Content Downloader.">
+    <meta name="keywords"
+        content="Telegram, content downloader, TRCD, restricted content, download telegram media, bypass restrictions">
+    <meta name="author" content="TRCD">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/">
+
+    <style>
+        :root {
+            --blue-1: #6fc0f0;
+            --blue-2: #3fb0e8;
+            --deep-blue: #0d61b8;
+            --text-light: rgba(0, 0, 0, 0.55);
+            --shadow-light: rgba(255, 255, 255, 0.3);
+            font-size: 16px;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            background: url('./assets/Telegram_logo.webp') center center / cover no-repeat;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.35);
+            /* 白色淡化遮罩 */
+            /* backdrop-filter: blur(0.8rem); */
+            /* 模糊效果 */
+            z-index: 0;
+        }
+
+        /* Top bar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(0.5rem);
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .brand .logo {
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 0.4rem;
+            background: #0d97d1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .brand .text {
+            color: var(--text-light);
+            font-weight: 600;
+            letter-spacing: 0.05rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            font-size: 0.95rem;
+            padding-right: 0.5rem;
+        }
+
+        /* Material Design Navigation Item */
+        .nav-item {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.4rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            min-width: 3rem;
+            min-height: 3rem;
+        }
+
+        .nav-item:hover {
+            color: var(--deep-blue);
+            background-color: rgba(13, 97, 184, 0.08);
+        }
+
+        .nav-item:active {
+            background-color: rgba(13, 97, 184, 0.15);
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(13, 97, 184, 0.3);
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Center content area */
+        .hero {
+            margin: auto;
+            text-align: center;
+            max-width: 68.75rem;
+            width: 100%;
+            padding: 5rem 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+
+        /* Title */
+        .title {
+            font-size: 4.5rem;
+            line-height: 1.05;
+            color: var(--deep-blue);
+            font-weight: 800;
+            text-align: center;
+            margin-top: 3.6rem;
+            text-shadow: 0 0.0625rem 0 var(--shadow-light);
+        }
+
+        .sub {
+            margin-top: 1.2rem;
+            font-size: 1rem;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .sub a {
+            color: rgba(13, 97, 184, 0.95);
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        /* Responsive design */
+        @media (max-width: 62.5rem) {
+            .title {
+                font-size: 3rem;
+            }
+
+            .nav-right {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 43.75rem) {
+            .title {
+                font-size: 2.25rem;
+            }
+
+            .sub {
+                font-size: 0.875rem;
+            }
+
+            .brand .text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 30rem) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                height: auto;
+                padding: 0.6rem;
+            }
+
+            .nav-right {
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                padding-left: 0.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <img src="./assets/icon.png" alt="TRCD logo" class="logo"></img>
+            <div class="text">Telegram Restricted Content Downloader</div>
+        </div>
+        <nav class="nav-right">
+            <div class="nav-item">Home</div>
+            <a class="nav-item" href="./privacy.html">Privacy Policy</a>
+        </nav>
+    </header>
+
+    <main class="hero" role="main">
+        <h1 class="title">Download Everything<br />Bypass All Restrictions<br />From Telegram</h1>
+        <div class="sub">via <a href="#" onclick="return false;">Telegram Restricted Content Downloader</a></div>
+    </main>
+</body>
+
+</html>

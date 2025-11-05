@@ -1,122 +1,292 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Privacy Policy | Telegram Restricted Content Downloader (TRCD)</title>
+    <meta name="description"
+        content="Read the Privacy Policy of Telegram Restricted Content Downloader (TRCD). Learn how we handle your data, ensure privacy, and comply with global data protection standards.">
+    <meta name="keywords" content="TRCD, Privacy Policy, Telegram, downloader, Chrome extension, data protection, GDPR">
+    <meta name="author" content="TRCD">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/privacy.html">
+
     <style>
+        :root {
+            --blue-1: #6fc0f0;
+            --blue-2: #3fb0e8;
+            --deep-blue: #0d61b8;
+            --text-light: rgba(0, 0, 0, 0.6);
+            --shadow-light: rgba(255, 255, 255, 0.3);
+            font-size: 16px;
+        }
+
+        html,
         body {
-            font-family: system-ui, Arial, sans-serif;
-            max-width: 800px;
-            margin: 2rem auto;
-            line-height: 1.6;
-            padding: 0 1rem;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             color: #333;
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        /* Top navigation bar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            background: transparent;
+            transition: background-color 0.4s ease, box-shadow 0.4s ease;
+            z-index: 100;
+        }
+
+        .topbar.scrolled {
+            background: rgba(13, 97, 184, 0.9);
+            box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, 0.15);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo {
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 0.4rem;
+            background: #0d97d1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .brand .text {
+            color: var(--text-light);
+            font-weight: 600;
+            letter-spacing: 0.05rem;
+        }
+
+        .topbar.scrolled .brand .text {
+            color: #fff;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Material navigation items */
+        .nav-item {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.4rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            min-width: 3rem;
+            min-height: 3rem;
+        }
+
+        .nav-item:hover {
+            color: var(--deep-blue);
+            background-color: rgba(13, 97, 184, 0.08);
+        }
+
+        .topbar.scrolled .nav-item {
+            color: #eaeaea;
+        }
+
+        .topbar.scrolled .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Page content */
+        main {
+            max-width: 50rem;
+            margin: 6rem auto 4rem auto;
+            padding: 0 1.2rem;
         }
 
         h1,
         h2 {
-            color: #0059c1;
+            color: var(--deep-blue);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-top: 1rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-top: 2rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+        }
+
+        a {
+            color: var(--deep-blue);
+            text-decoration: underline;
         }
 
         footer {
             margin-top: 3rem;
-            font-size: 0.9em;
+            font-size: 0.9rem;
             color: #555;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 43.75rem) {
+            .brand .text {
+                display: none;
+            }
+
+            main {
+                padding: 0 1rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Privacy Policy</h1>
-    <p>Effective date: <strong>November&nbsp;3,&nbsp;2025</strong></p>
 
-    <h2>1. Introduction</h2>
-    <p>
-        Telegram Restricted Content Downloader (“<strong>TRCD</strong>”, “we”, “us”, or “our”)
-        is a Chrome extension that allows users to manage and download files
-        from Telegram channels or chats that they have legitimate access to.
-        We respect your privacy and are committed to protecting it through this policy.
-    </p>
+    <header class="topbar" id="topbar">
+        <div class="brand">
+            <img src="./assets/icon.png" alt="TRCD logo" class="logo"></img>
+            <div class="text">Telegram Restricted Content Downloader</div>
+        </div>
+        <nav class="nav-right">
+            <a class="nav-item" href="./index.html">Home</a>
+            <a class="nav-item" href="./privacy.html">Privacy Policy</a>
+        </nav>
+    </header>
 
-    <h2>2. Information We Collect</h2>
-    <p>
-        TRCD itself does <strong>not collect, store, or transmit</strong> any personally identifiable information (PII)
-        to our servers.
-        The extension processes data locally within your browser.
-    </p>
-    <ul>
-        <li><strong>Google OAuth data</strong>: If you sign in with your Google account, TRCD only requests basic
-            profile information (name, email, profile picture) to verify identity and sync settings. This data is
-            handled through Google’s secure OAuth 2.0 system and is never shared or stored by us.</li>
-        <li><strong>Telegram data</strong>: Files, messages, and content accessed via TRCD remain within Telegram’s
-            infrastructure and your local browser storage. We do not collect or host these files.</li>
-        <li><strong>Usage statistics</strong>: We may use anonymous, aggregated metrics (e.g., feature usage counts) to
-            improve user experience. No personal identifiers are included.</li>
-    </ul>
+    <main role="main">
+        <h1>Privacy Policy</h1>
+        <p>Effective date: <strong>November&nbsp;3,&nbsp;2025</strong></p>
 
-    <h2>3. How We Use Information</h2>
-    <p>
-        Any data processed by TRCD is used solely for the following legitimate purposes:
-    </p>
-    <ul>
-        <li>Authenticating users via Google OAuth (if applicable).</li>
-        <li>Providing and improving extension functionality.</li>
-        <li>Ensuring secure and authorized access to Telegram content.</li>
-    </ul>
+        <h2>1. Introduction</h2>
+        <p>Telegram Restricted Content Downloader (“<strong>TRCD</strong>”, “we”, “us”, or “our”) is a Chrome extension
+            that allows users to manage and download files from Telegram channels or chats that they have legitimate
+            access to. We respect your privacy and are committed to protecting it through this policy.</p>
 
-    <h2>4. Data Storage and Security</h2>
-    <p>
-        TRCD does not maintain external servers or databases.
-        All user data and downloaded content are stored locally on your device,
-        under the protection of your browser and Telegram’s encryption mechanisms.
-    </p>
+        <h2>2. Information We Collect</h2>
+        <p>TRCD itself does <strong>not collect, store, or transmit</strong> any personally identifiable information
+            (PII) to our servers. The extension processes data locally within your browser.</p>
+        <ul>
+            <li><strong>Google OAuth data</strong>: If you sign in with your Google account, TRCD only requests basic
+                profile information (name, email, profile picture) to verify identity and sync settings. This data is
+                handled through Google’s secure OAuth 2.0 system and is never shared or stored by us.</li>
+            <li><strong>Telegram data</strong>: Files, messages, and content accessed via TRCD remain within Telegram’s
+                infrastructure and your local browser storage. We do not collect or host these files.</li>
+            <li><strong>Usage statistics</strong>: We may use anonymous, aggregated metrics (e.g., feature usage counts)
+                to improve user experience. No personal identifiers are included.</li>
+        </ul>
 
-    <h2>5. Sharing of Information</h2>
-    <p>
-        We do not sell, trade, or otherwise transfer your information to any third party.
-        We may disclose information only if required by law, or to protect our legal rights.
-    </p>
+        <h2>3. How We Use Information</h2>
+        <p>Any data processed by TRCD is used solely for the following legitimate purposes:</p>
+        <ul>
+            <li>Authenticating users via Google OAuth (if applicable).</li>
+            <li>Providing and improving extension functionality.</li>
+            <li>Ensuring secure and authorized access to Telegram content.</li>
+        </ul>
 
-    <h2>6. Third-Party Services</h2>
-    <p>
-        TRCD interacts with external platforms (e.g., Telegram, Google OAuth) under their respective terms and privacy
-        policies.
-        Please refer to:
-    </p>
-    <ul>
-        <li><a href="https://telegram.org/privacy" target="_blank" rel="noopener">Telegram Privacy Policy</a></li>
-        <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
-    </ul>
+        <h2>4. Data Storage and Security</h2>
+        <p>TRCD does not maintain external servers or databases. All user data and downloaded content are stored locally
+            on your device, under the protection of your browser and Telegram’s encryption mechanisms.</p>
 
-    <h2>7. Children’s Privacy</h2>
-    <p>
-        TRCD is not intended for use by individuals under the age of 13. We do not knowingly collect data from children.
-    </p>
+        <h2>5. Sharing of Information</h2>
+        <p>We do not sell, trade, or otherwise transfer your information to any third party. We may disclose information
+            only if required by law, or to protect our legal rights.</p>
 
-    <h2>8. Your Rights</h2>
-    <p>
-        Depending on your jurisdiction, you may have rights to access, correct, or delete your personal data processed
-        through Google OAuth.
-        Such requests can be made directly via your Google account settings.
-    </p>
+        <h2>6. Third-Party Services</h2>
+        <p>TRCD interacts with external platforms (e.g., Telegram, Google OAuth) under their respective terms and
+            privacy policies. Please refer to:</p>
+        <ul>
+            <li><a href="https://telegram.org/privacy" target="_blank" rel="noopener">Telegram Privacy Policy</a></li>
+            <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>
+            </li>
+        </ul>
 
-    <h2>9. Changes to This Policy</h2>
-    <p>
-        We may update this Privacy Policy periodically.
-        Any changes will be posted on this page with an updated effective date.
-    </p>
+        <h2>7. Children’s Privacy</h2>
+        <p>TRCD is not intended for use by individuals under the age of 13. We do not knowingly collect data from
+            children.</p>
 
-    <h2>10. Contact Us</h2>
-    <p>
-        For any questions about this Privacy Policy or the TRCD extension, please contact us at:
-        <a href="mailto:cong949654900@gmail.com">cong949654900@gmail.com</a>
-    </p>
+        <h2>8. Your Rights</h2>
+        <p>Depending on your jurisdiction, you may have rights to access, correct, or delete your personal data
+            processed through Google OAuth. Such requests can be made directly via your Google account settings.</p>
 
-    <footer>
-        &copy; 2025 Telegram Restricted Content Downloader (TRCD). All rights reserved.
-    </footer>
+        <h2>9. Changes to This Policy</h2>
+        <p>We may update this Privacy Policy periodically. Any changes will be posted on this page with an updated
+            effective date.</p>
+
+        <h2>10. Contact Us</h2>
+        <p>For any questions about this Privacy Policy or the TRCD extension, please contact us at: <a
+                href="mailto:cong949654900@gmail.com">cong949654900@gmail.com</a></p>
+
+        <footer>
+            &copy; 2025 Telegram Restricted Content Downloader (TRCD). All rights reserved.
+        </footer>
+    </main>
+
+    <script>
+
+        // Scroll gradient effect
+        window.addEventListener('scroll', () => {
+            const topbar = document.getElementById('topbar');
+            if (window.scrollY > 80) {
+                topbar.classList.add('scrolled');
+            } else {
+                topbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+
 </body>
 
 </html>
